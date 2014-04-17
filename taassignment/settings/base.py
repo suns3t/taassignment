@@ -17,7 +17,7 @@ DJANGO_DIR = os.path.normpath(os.path.join(os.path.dirname(__file__), "../"))
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.normpath(os.path.join(DJANGO_DIR, "../"))
 
-# AUTH_USER_MODEL = 'users.User'
+AUTH_USER_MODEL = 'users.User'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
@@ -41,11 +41,13 @@ INTERNAL_IPS = IPList(['10.*', '192.168.*'])
 # Application definition
 INSTALLED_APPS = (
     'django.contrib.admin',
-    'django.contrib.auth',
+    #'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'taassignment.users',
+    'taassignment.course',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -56,6 +58,31 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
+
+ROOT_URLCONF = 'taassignment.urls'
+
+WSGI_APPLICATION = 'taassignment.wsgi.application'
+
+# CAS authentication setting using djangocas
+USE_CAS = True
+
+if USE_CAS:
+    CAS_SERVER_URL = 'https://sso.pdx.edu/cas/'
+
+    AUTHENTICATION_BACKENDS = (
+        'django.contrib.auth.backends.ModelBackend',
+        'taassignment.backends.PSUBackend',
+    )
+
+    MIDDLEWARE_CLASSES += (
+        'djangocas.middleware.CASMiddleware',
+    )
+
+## end CAS authentication setting
+
+# LDAP support
+LDAP_URL = "ldap://ldap.oit.pdx.edu"
+LDAP_BASE_DN = 'dc=pdx,dc=edu'
 
 ROOT_URLCONF = 'taassignment.urls'
 
@@ -95,7 +122,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 TEMPLATE_CONTEXT_PROCESSORS = TCP + (
-    'django.core.context_procesors.request',
+    'django.core.context_processors.request',
 )
 
 TEMPLATE_DIRS = (

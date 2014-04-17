@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{% block page_title %}{{ page_title }}{% endblock %}</title>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}bootstrap-3.1.1-dist/js/bootstrap.js"></script>
+        <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}bootstrap-3.1.1-dist/css/bootstrap.css">
+    </head>
+    <body>
+        <nav class="navbar navbar-inverse" role="navigation">
+            <div class="container">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <a class="navbar-brand" style="margin-top: -10px;" href="/"><span style="padding-left: 20px">TA Assignment Form</span></a>
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    
+                </div>
+
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav navbar-right">
+                        {% if user.is_active %}
+                            {% if user.is_faculty %}
+                                <li>
+                                    <p class="navbar-text">Hi, Faculty {% firstof user.get_full_name %}</p>
+                                </li>
+                            {% elif user.is_staff %}
+                                <li>
+                                    <p class="navbar-text">Hi, Admin {% firstof user.get_full_name %}</p>
+                                </li>
+                            {% endif %}
+                            <li>
+                                <a href="{% url 'account-logout' %}" >Logout</a>
+                            </li>
+                        {% else %}
+                            <li>
+                                <a href="{% url 'account-login' %}">Login</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="container" role="main">
+            {% block content %}{% endblock %}
+        </div>   
+    </body>
+</html>
