@@ -17,8 +17,11 @@
 		<tr>
 			<td>{{ course.course_no }}</td>
 			<td>{{ course.course_name }}</td>
-			<td>No teacher</td>
-			<td>No TA</td>
+            <td>{% for faculty in course.faculties.all %}
+                    <span>{{ faculty }}</span>
+                {% endfor %}
+            </td>
+            <td>{{ course.tas.count }}</td>
 		</tr>
 		{% endfor %}
 	</table>

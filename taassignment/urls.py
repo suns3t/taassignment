@@ -11,7 +11,7 @@ urlpatterns = patterns('',
 	
 	url(r'^$', course.public_view_list , name='home'),
     url(r'^admin/', include(admin.site.urls)),
-
+    url(r'^faculty/', course.faculty_view_list, name='faculty-home'),
 )
 
 # djangocas

@@ -41,9 +41,12 @@ class User(AbstractBaseUser):
     def get_short_name(self):
         return self.first_name + " " + self.last_name
 
-    # we don't need granular permissions; all staff will have access to
-    # everything
-    def has_perm(self, perm, obj=None): return True
+    # Grant faculty permission to change_ta
+    def has_perm(self, perm, obj=None): 
+        if (self.is_faculty and perm == 'course.change_ta') or self.is_staff:
+            return True
+        return False
+
     def has_module_perms(self, app_label):  return True
 
 
