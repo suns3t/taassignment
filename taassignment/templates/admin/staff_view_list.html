@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block page_title %}TA Assignment Form - Admin Homepage{% endblock %}
+
+{% block content %}
+<script type="text/javascript" src="{{ STATIC_URL }}bootstrap-3.1.1-dist/js/panel.js"></script>
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}bootstrap-3.1.1-dist/css/panel.css">
+
+<div class="container">
+    <h1>You as an admin can add or change any class and TAs here!</h1>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-primary filterable">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Courses</h3>
+                    <div class="pull-right">
+                        <span class="clickagle filter" data-toggle="tooltip" title="Toggle table filter" data-container="body">
+                            <i class="glyphicon glyphicon-filter"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <input type="text" class="form-control" id="dev-table-filter" data-action="filter" data-filters="#dev-table" placeholder="Filter Developers" />
+                </div>
+                <table class="table table-hover" id="dev-table">
+                    <thead>
+                        <tr>
+                            <th>Course number</th>
+                            <th>Course name</th>
+                            <th>Teacher</th>
+                            <th>Number of TAs</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% if courses.count %}
+                        {% for course in courses %}
+                        <tr>
+                            <td>{{ course.course_no }}</td>
+                            <td>{{ course.course_name }}</td>
+                            <td>{% for faculty in course.faculties.all %}
+                                <span>{{ faculty.get_full_name }}</span>
+                                {% endfor %}
+                            </td>
+                            <td>{{ course.tas.count }}</td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                    <h4>There is no class currently. Please add class.</h4>
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-primary filterable">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Users</h3>
+                    <div class="pull-right">
+                        <span class="clickagle filter" data-toggle="tooltip" title="Toggle table filter" data-container="body">
+                            <i class="glyphicon glyphicon-filter"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <input type="text" class="form-control" id="dev-table-filter" data-action="filter" data-filters="#dev-table" placeholder="Filter Developers" />
+                </div>
+                <table class="table table-hover" id="user-table">
+                    <tr>
+                        <h4>No user</h4>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
