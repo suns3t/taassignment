@@ -26,7 +26,7 @@
 				<td>{{ course.course_no }}</td>
 				<td>{{ course.course_name }}</td>
 	            <td>{% for faculty in course.faculties.all %}
-	                    <span>{{ faculty }}</span>
+	                    {{ faculty }}, 
 	                {% endfor %}
 	            </td>
 	            <td>{{ course.tas.count }}</td>

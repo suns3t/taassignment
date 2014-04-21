@@ -4,71 +4,164 @@
 
 {% block content %}
 <script type="text/javascript" src="{{ STATIC_URL }}bootstrap-3.1.1-dist/js/panel.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}bootstrap-3.1.1-dist/js/checkbox.js"></script>
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}bootstrap-3.1.1-dist/css/panel.css">
 
 <div class="container">
-    <h1>You as an admin can add or change any class and TAs here!</h1>
+    <h3>You as an admin can add or change any class and TAs here!</h3>
     <div class="row">
         <div class="col-md-6">
-            <div class="panel panel-primary filterable">
+            <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h3 class="panel-title">Courses</h3>
                     <div class="pull-right">
-                        <span class="clickagle filter" data-toggle="tooltip" title="Toggle table filter" data-container="body">
-                            <i class="glyphicon glyphicon-filter"></i>
-                        </span>
+                        <span class="clickable">Add Course <i class="glyphicon glyphicon-plus"></i>
+                        </span> 
                     </div>
                 </div>
                 <div class="panel-body">
-                    <input type="text" class="form-control" id="dev-table-filter" data-action="filter" data-filters="#dev-table" placeholder="Filter Developers" />
+                    <table class="table table-hover" id="course-table">
+                        <thead class="text-dark-green">
+                            <tr>
+                                <th>Course number</th>
+                                <th>Course name</th>
+                                <th>Teacher</th>
+                                <th>Number of TAs</th>
+                            </tr>
+                        </thead>
+                        {% if courses.count %}
+                            <tr id="search_box">
+                                <td colspan="4">
+                                    <input type="text" class="form-control" id="course-table-filter" data-action="filter" data-filters="#course-table" placeholder="Filter Courses" />
+                                </td>
+                            </tr>
+                            {% for course in courses %}
+                                <tr>
+                                    <td>{{ course.course_no }}</td>
+                                    <td>{{ course.course_name }}</td>
+                                    <td>{% for faculty in course.faculties.all %}
+                                        <span>{{ faculty.get_full_name }}</span>
+                                        {% endfor %}
+                                    </td>
+                                    <td>{{ course.tas.count }}</td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="4">There is no class currently. Please add class.</td>
+                        </tr>
+                        {% endif %}
+                        
+                    </table>
                 </div>
-                <table class="table table-hover" id="dev-table">
-                    <thead>
-                        <tr>
-                            <th>Course number</th>
-                            <th>Course name</th>
-                            <th>Teacher</th>
-                            <th>Number of TAs</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {% if courses.count %}
-                        {% for course in courses %}
-                        <tr>
-                            <td>{{ course.course_no }}</td>
-                            <td>{{ course.course_name }}</td>
-                            <td>{% for faculty in course.faculties.all %}
-                                <span>{{ faculty.get_full_name }}</span>
-                                {% endfor %}
-                            </td>
-                            <td>{{ course.tas.count }}</td>
-                        </tr>
-                        {% endfor %}
-                    {% else %}
-                    <h4>There is no class currently. Please add class.</h4>
-                    {% endif %}
-                    </tbody>
-                </table>
             </div>
         </div>
+        
         <div class="col-md-6">
             <div class="panel panel-primary filterable">
                 <div class="panel-heading">
                     <h3 class="panel-title">Users</h3>
                     <div class="pull-right">
-                        <span class="clickagle filter" data-toggle="tooltip" title="Toggle table filter" data-container="body">
-                            <i class="glyphicon glyphicon-filter"></i>
-                        </span>
+                        <span class="clickable add_user">Add User <i class="glyphicon glyphicon-plus"></i>
+                        </span> 
                     </div>
                 </div>
                 <div class="panel-body">
-                    <input type="text" class="form-control" id="dev-table-filter" data-action="filter" data-filters="#dev-table" placeholder="Filter Developers" />
+                    <div id="add_user_form" class="row" disable>
+                        <form role="form">
+                            <h3 class="text-center text-dark-green" style="border-bottom: 1px solid #76ad2d; padding-bottom:10px">Add new user</h3>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <input type="text" name="first_name" id="first_name"class="form-control" placeholder="First name" tabindex="1">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <input type="text" name="last_name" id="last_name" class="form-control" placeholder="Last name" tabindex="1">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 form-group">
+                                    <input type="text" name="username" id="username" class="form-control" placeholder="Odin Username" tabindex="3">
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-4">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox"> Staff
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox"> Faculty
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox"> TA
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-xs-12 col-md-6"><input type="submit" value="Save" class="btn btn-primary btn-block" tabindex="7"></div>
+                                <div class="col-xs-12 col-md-6"><a href="#" class="btn btn-default btn-block">Cancel</a></div>
+                            </div>
+                            
+                        </form>
+                    </div>
+                    <table class="table table-hover" id="user-table">
+                        <thead class="text-dark-green">
+                            <tr>
+                                <th>Username</th>
+                                <th>Full name</th>
+                                <th>Staff</th>
+                                <th>Faculty</th>
+                                <th>TA</th>
+                            </tr>
+                        </thead>
+                        {% if users.count %}
+                            <tr id="search_box">
+                                <td colspan="5">
+                                    <input type="text" class="form-control" id="course-table-filter" data-action="filter" data-filters="#user-table" placeholder="Filter Users" />
+                                </td>
+                            </tr>
+                            {% for user in users %}
+                                <tr>
+                                    <td>{{ user.username }}</td>
+                                    <td>{{ user.get_full_name }}</td>
+                                    {% if user.is_staff %}
+                                        <td><i class="glyphicon glyphicon-ok"></i></td>
+                                    {% else %}
+                                        <td><i class="glyphicon glyphicon-remove"></i></td>
+                                    {% endif %}
+
+                                    {% if user.is_faculty %}
+                                        <td><i class="glyphicon glyphicon-ok"></i></td>
+                                    {% else %}
+                                        <td><i class="glyphicon glyphicon-remove"></i></td>
+                                    {% endif %}
+                                    {% if user.is_ta %}
+                                        <td><i class="glyphicon glyphicon-ok"></i></td>
+                                    {% else %}
+                                        <td><i class="glyphicon glyphicon-remove"></i></td>
+                                    {% endif %}
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="4">There is no user currently. Please add class.</td>
+                        </tr>
+                        {% endif %}
+                    </table>
                 </div>
-                <table class="table table-hover" id="user-table">
-                    <tr>
-                        <h4>No user</h4>
-                    </tr>
-                </table>
             </div>
         </div>
     </div>

@@ -1,13 +1,7 @@
-/**
-*   I don't recommend using this plugin on large tables, I just wrote it to make the demo useable. It will work fine for smaller tables 
-*   but will likely encounter performance issues on larger tables.
-*
-*		<input type="text" class="form-control" id="dev-table-filter" data-action="filter" data-filters="#dev-table" placeholder="Filter Developers" />
-*		$(input-element).filterTable()
-*		
-*	The important attributes are 'data-action="filter"' and 'data-filters="#table-selector"'
-*/
+
 (function(){
+
+	// Script for the filter bar
     'use strict';
 	var $ = jQuery;
 	$.fn.extend({
@@ -38,6 +32,8 @@
 		}
 	});
 	$('[data-action="filter"]').filterTable();
+
+
 })(jQuery);
 
 $(function(){
@@ -54,4 +50,18 @@ $(function(){
 		}
 	});
 	$('[data-toggle="tooltip"]').tooltip();
+})
+
+$(document).ready(function() {
+	$('.filterable .add_user').click(function() {
+		var $panel = $(this).parents('.filterable'),
+			$add_user_form = $panel.find('#add_user_form');
+
+		if ($add_user_form.prop('disabled') == true) {
+			$add_user_form.prop('disabled', false);
+			$add_user_form.first().focus();
+		} else {
+			$add_user_form.val('').prop('disabled', true);
+		}
+	})
 })
