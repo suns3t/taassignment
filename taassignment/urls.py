@@ -4,13 +4,13 @@ from django.contrib import admin
 from django.conf import settings
 
 from taassignment.course import views as course
-
+from taassignment.users import views as user
 admin.autodiscover()
 
 urlpatterns = patterns('',
 	
 	url(r'^$', course.public_view_list , name='home'),
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', user.staff_view_list, name='staff-home'),
     url(r'^faculty/', course.faculty_view_list, name='faculty-home'),
 )
 
