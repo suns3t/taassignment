@@ -27,7 +27,7 @@
 
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav navbar-right">
-                        {% if user.is_active %}
+                        {% if user %}
                             {% if user.is_faculty %}
                                 <li>
                                     <p class="navbar-text">Hi, Faculty {% firstof user.get_full_name %}</p>

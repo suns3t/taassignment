@@ -57,11 +57,11 @@ $(document).ready(function() {
 		var $panel = $(this).parents('.filterable'),
 			$add_user_form = $panel.find('#add_user_form');
 
-		if ($add_user_form.prop('disabled') == true) {
-			$add_user_form.prop('disabled', false);
+		if ($add_user_form.css('display') == 'none') {
+			$add_user_form.css('display','block')
 			$add_user_form.first().focus();
 		} else {
-			$add_user_form.val('').prop('disabled', true);
+			$add_user_form.val('').css('display', 'none');
 		}
 	})
 })
