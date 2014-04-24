@@ -4,27 +4,26 @@
 
 {% block content %}
 	{% if has_courses %}
-    <table class="table table-striped">
+	<table>
 		<thead>
 			<tr>
-				<th>No.</th>
+				<th>Course no.</th>
 				<th>Course name</th>
-				<th>Teacher Name</th>
-				<th># TA's</th>
+                <th>Teacher</th>
+                <th>Ta</th>
+                <th>No Course</th>
 			</tr>
 		</thead>
 		{% for course in courses %}
 		<tr>
 			<td>{{ course.course_no }}</td>
             <td>{{ course.course_name }}</td>
-		    {% for teacher in course.faculties.all %}
-            <td>{{ teacher.first_name}} {{teacher.last_name }}</td>
-		    {% endfor %}
-            <td>{{ course.total }}</td>
+            <td>{{ course.teacher }}</td>
+            <td>{{ course.ta }}</td>
 		</tr>
 		{% endfor %}
 	</table>
-    <h4>Total   :{{ no_of_courses }}</h4>
+    {% block content_total %}{{ no_of_courses }}{% endblock %}
 	{% else %}
 	<h4>There is no class available at the moment. Contact admin to add courses</h4>
 	{% endif %}
