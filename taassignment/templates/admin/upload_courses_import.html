@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block page_title %}Teacher's - TAs Upload Courses CSV File{% endblock %}
+
+{% block content %}
+<h3> Upload Courses CSV File </h3>
+<form enctype="multipart/form-data" action"/upload/" name="UploadCoursesImport" mothod="post">
+    {% csrf_token %}
+    {{ form }}
+    <input id="signUpSubmit" type="submit" value="Submit">
+</form>
+{% endblock %}

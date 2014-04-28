@@ -13,6 +13,8 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^admin/course/tas/',course.course_tas_view_list, name='course-tas' ),
     url(r'^teacher/',course.teacher_view_list, name='teachers' ),
+    url(r'^upload_courses/',course.upload_courses, name='upload-courses' ),
+    url(r'^upload_tas/',course.upload_tas, name='upload-tas' ),
     url(r'^admin/course/teachers/',course.course_teacher_view_list, name='course-teacher' ),
     url(r'^faculty/', course.faculty_view_list, name='faculty-home'),
 )

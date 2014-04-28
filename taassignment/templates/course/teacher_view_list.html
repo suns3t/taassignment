@@ -5,7 +5,8 @@
 {% block content %}
 	{% if has_courses %}
     <div class="table-responsive">
-          <table class="table">
+        <a onclick="window.print()">Print</a>
+        <table class="table">
               <thead>
             <tr bgcolor=#101010>
                         <th><strong><font color="white">Teacher</th></font></strong>
@@ -25,7 +26,7 @@
                     <td><strong>{{ course.total }}</strong></td> 
         </tr>
         {% if course.tas.all %}
-        <tr><td Colspan=4 class="info"><ol>
+        <tr><td Colspan=4 bgcolor="white"><ol>
 		    {% for ta in course.tas.all %}
             <li>TA -  {{ ta.username }} / {{ ta.last_name }}, {{ ta.first_name }} </li>
             {% endfor %}
