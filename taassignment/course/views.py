@@ -10,7 +10,8 @@ from django.conf import settings
 # Course view of the pag
 def teacher_view_list(request):
     current_user  = request.user
-    courses       = Course.objects.all().filter(faculties__username=current_user.username).annotate(total=Count('tas')).order_by('course_name')
+ #   courses       = Course.objects.all().filter(faculties__username=current_user.username).annotate(total=Count('tas')).order_by('course_name')
+    courses       = Course.objects.all().annotate(total=Count('tas')).order_by('course_name')
     no_of_courses = len(courses)
 
     return render(request, "course/teacher_view_list.html", {
