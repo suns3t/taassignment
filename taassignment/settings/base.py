@@ -115,7 +115,7 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
 
-MEDIA_URL = '/media/'
+MEDIA_URL = '/users/whg/'
 
 # Absolute filesystem path to the directory that will hold user-uploaded files
 # Example: "/var/www/example.com/media/"

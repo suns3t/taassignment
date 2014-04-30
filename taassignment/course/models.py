@@ -1,6 +1,8 @@
 from django.db import models
 from taassignment.users.models import User 
 # Create your models here.
+
+
 class Course(models.Model):
 
 	id = models.AutoField(primary_key=True)

@@ -17,6 +17,7 @@
 			</tr>
 		</thead>
 		{% for course in courses %}
+        {% if course.faculties.all %}
 		<tr class="active">
 		    {% for teacher in course.faculties.all %}
             <td><strong> {{ teacher.first_name}} {{teacher.last_name }}</strong></td>
@@ -32,6 +33,7 @@
             {% endfor %}
         </ol></td></tr>
         {% endif %}
+            {% endif %}
             {% endfor %}
     </table></div>
     <h4>Total: {{ no_of_courses }}</h4>
