@@ -4,18 +4,21 @@ from django.contrib import admin
 from django.conf import settings
 
 from taassignment.course import views as course
-
+from taassignment.users import views as user
 admin.autodiscover()
 
 urlpatterns = patterns('',
 	
 	url(r'^$', course.public_view_list , name='home'),
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^admin/course/tas/',course.course_tas_view_list, name='course-tas' ),
+    url(r'^admin/$', user.staff_view_list, name='staff-home'),
     url(r'^teacher/',course.teacher_view_list, name='teachers' ),
-    url(r'^upload_courses/',course.upload_courses, name='upload-courses' ),
     url(r'^upload_tas/',course.upload_tas, name='upload-tas' ),
+    url(r'^upload_courses/',course.upload_courses, name='upload-courses' ),
+    url(r'^admin/course/tas/',course.course_tas_view_list, name='course-tas' ),
     url(r'^admin/course/teachers/',course.course_teacher_view_list, name='course-teacher' ),
+    url(r'^admin/add_user$', user.staff_add_user, name='staff-add-user'),
+    url(r'^admin/edit_user/(?P<userid>\w{0,5})$' , user.staff_edit_user, name='staff-edit-user'),
+    url(r'^admin/delete_user/(?P<userid>\w{0,5})$', user.staff_delete_user, name='staff-delete-user'),
     url(r'^faculty/', course.faculty_view_list, name='faculty-home'),
 )
 

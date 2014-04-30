@@ -1,0 +1,34 @@
+        .row {
+            margin-top: 2px;
+        }
+        .clickable{
+            cursor: pointer;   
+        }
+
+        .panel-heading div {
+            margin-top: -18px;
+            font-size: 15px;
+
+        }
+        .panel-heading div span{
+            margin-left:5px;
+        }
+        .panel-heading div span a {
+          color: #fff;
+          text-decoration: none;
+          padding-left: 5px;
+          padding-right: 5px;
+        }
+        .panel-heading div span a:hover,
+        .panel-heading div span a:focus {
+          color: #fff;
+        }
+        .panel-heading div span a:focus {
+          outline: thin dotted;
+          outline: 5px auto -webkit-focus-ring-color;
+          outline-offset: -2px;
+        }
+        .panel-body {
+            margin: 0px;
+            padding: 0px;
+        }

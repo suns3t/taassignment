@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block page_title %}TA Assignment Form - Admin Homepage{% endblock %}
+
+{% block content %}
+
+<form role="form" method="post">
+    {% csrf_token %}
+    {{ user_form.errors }}
+    <h3 class="text-center text-dark-green" style="border-bottom: 1px solid #76ad2d; padding-bottom:10px">Add new user</h3>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ user_form.first_name }}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ user_form.last_name }}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 form-group">
+            {{ user_form.username }}
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-md-4">
+            <div class="checkbox">
+                <label>
+                    {{ user_form.is_staff }} Staff
+                </label>
+                
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="checkbox">
+                <label>
+                    {{ user_form.is_faculty}} Faculty
+                </label>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="checkbox">
+                <label>
+                    {{ user_form.is_ta }} TA
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-xs-12 col-md-6">
+            <input type="submit" value="Save" class="btn btn-primary btn-block" tabindex="7">
+        </div>
+        <div class="col-xs-12 col-md-6">
+            <a href="/admin" class="btn btn-default btn-block">Cancel</a>
+        </div>
+    </div>
+    
+</form>
+{% endblock %}

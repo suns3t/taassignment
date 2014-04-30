@@ -3,29 +3,38 @@
 {% block page_title %}Main Page - TA Assignment Form{% endblock %}
 
 {% block content %}
+<script type="text/javascript" src="{{ STATIC_URL }}bootstrap-3.1.1-dist/js/panel.js"></script>
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}bootstrap-3.1.1-dist/css/panel.css">
+	<h2>Title</h2>
+	<h3>Introduction goes here!</h3>
 	{% if has_courses %}
-    <table class="table table-striped">
-		<thead>
-			<tr>
-				<th>No.</th>
-				<th>Course name</th>
-				<th>Teacher Name</th>
-				<th># TA's</th>
+		<table class="table table-hover" id="course-table">
+			<thead class="text-dark-green">
+				<tr>
+					<th>Course no.</th>
+					<th>Course name</th>
+					<th>Teacher</th>
+					<th>Number of TA</th>
+				</tr>
+			</thead>
+			<tr id="search_box">
+				<td colspan="4">
+				<input type="text" class="form-control" id="course-table-filter" data-action="filter" data-filters="#course-table" placeholder="Filter Courses" /></td>
 			</tr>
-		</thead>
-		{% for course in courses %}
-		<tr>
-			<td>{{ course.course_no }}</td>
-            <td>{{ course.course_name }}</td>
-		    {% for teacher in course.faculties.all %}
-            <td>{{ teacher.first_name}} {{teacher.last_name }}</td>
-		    {% endfor %}
-            <td>{{ course.total }}</td>
-		</tr>
-		{% endfor %}
-	</table>
-    <h4>Total   :{{ no_of_courses }}</h4>
-	{% else %}
-	<h4>There is no class available at the moment. Contact admin to add courses</h4>
+			{% for course in courses %}
+			<tr>
+				<td>{{ course.course_no }}</td>
+				<td>{{ course.course_name }}</td>
+	            <td>{% for faculty in course.faculties.all %}
+	                    {{ faculty }}, 
+	                {% endfor %}
+	            </td>
+	            <td>{{ course.tas.count }}</td>
+			</tr>
+			{% endfor %}
+		</table>
+		{% else %}
+		<h4>There is no class available at the moment. Contact admin to add courses</h4>
+	</div>
 	{% endif %}
 {% endblock %}

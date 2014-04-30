@@ -10,6 +10,11 @@ Clone this repository, cd into the project folder and run the following commands
     pip install -r requirements.txt
     chmod +x manage.py
 
+Create a local copy of the example settings, and configure the SECRET_KEY and DB config
+    
+    cp taassignment/settings/local.py.template taassignment/settings/local.py
+    vi taassignment/settings/local.py
+
 Create an Mysql local database named taassignment and then synchronize the new database:
     
     ./manage.py syncdb

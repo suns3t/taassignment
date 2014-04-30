@@ -11,11 +11,11 @@
         <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}bootstrap-3.1.1-dist/css/bootstrap.css">
     </head>
     <body>
-        <nav class="navbar navbar-inverse" role="navigation">
-            <div class="container">
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container text-dark-green">
                 <!-- Brand and toggle get grouped for better mobile display -->
                 <div class="navbar-header">
-                    <a class="navbar-brand" style="margin-top: -10px;" href="/"><span style="padding-left: 20px">TA Assignment Form</span></a>
+                    <a class="navbar-brand" href="/"><span style="padding-left: 20px">TA Assignment Form</span></a>
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                         <span class="sr-only">Toggle navigation</span>
                         <span class="icon-bar"></span>
@@ -27,7 +27,7 @@
 
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav navbar-right">
-                        {% if user.is_active %}
+                        {% if user %}
                             {% if user.is_faculty %}
                                 <li>
                                     <p class="navbar-text">Hi, Faculty {% firstof user.get_full_name %}</p>
@@ -42,15 +42,27 @@
                             </li>
                         {% else %}
                             <li>
-                                <a href="{% url 'account-login' %}">Login</a>
+                                <p class="navbar-text">Login as </p>
+                            </li>
+                            <li>
+                                <a href="{% url 'account-login' %}">Faculty</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'account-login' %}">Admin</a>
                             </li>
                         {% endif %}
                     </ul>
                 </div>
             </div>
         </nav>
-        <div class="container" role="main">
+        <div class="container main">
             {% block content %}{% endblock %}
+            <div class="push"></div>
+        </div>
+        <div class="footer">
+            <div class="container text-dark-green">
+                <h6>Copyright 2014</h4>
+            </div>
         </div>   
     </body>
 </html>

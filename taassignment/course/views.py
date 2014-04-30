@@ -21,9 +21,9 @@ def teacher_view_list(request):
         })
 
 def request_csv_tas_upload(file):
-    users = User()
-#    users.objects.all().delete()
+    #    User.objects.filter(is_ta = True).delete()
     for r in csv.reader(file):
+        user = User()
         Oidn = r
         users.username = Oidn
         users.is_ta  = true
@@ -31,16 +31,18 @@ def request_csv_tas_upload(file):
         users.save()
 
 def request_csv_courses_upload(file):
-    courses = Course()
-#    courses.objects.all().delete()
+#    course.objects.filter(is_faculty = True).delete()
     for r in csv.reader(file):
+        course = Course()
         course_no, course_name, Oidn = r
-        courses.course_no = course_no
-        courses.course_name = course_name
-        courses.facutlies.username = Oidn
-        courses.faculties.is_faculty = true
-        courses.facutlies.is_active = true
-        courses.save()
+        course.course_no = course_no
+        course.course_name = course_name
+        user = User()
+        user.username = Oidn
+        user.is_faculty = true
+        user.is_active = true
+        course.facutlies.add(user)
+        course.save()
 
 
     # Upload Courses
