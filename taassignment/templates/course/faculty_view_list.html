@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block page_title %}Main Page - TA Assignment Form{% endblock %}
+
+{% block content %}
+<script type="text/javascript" src="{{ STATIC_URL }}bootstrap-3.1.1-dist/js/panel.js"></script>
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}bootstrap-3.1.1-dist/css/panel.css">
+
+<script type="text/javascript" src="{{ STATIC_URL }}select2-3.4.6/select2.js"></script>
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}select2-3.4.6/select2-bootstrap.css">
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}select2-3.4.6/select2.css">
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(".id_tas").select2({
+            placeholder: "Type in to select a TA",
+            allowClear: true,
+            dropdownAutoWidth : false,
+        });
+    })
+</script>
+    <h2>Title</h2>
+    <h3>Introduction goes here!</h3>
+    {% if has_courses %}
+        <table class="table table-hover" id="course-table">
+            <thead class="text-dark-green">
+                <tr>
+                    <th colspan="2">Course no.</th>
+                    <th colspan="4">Course name</th>
+                    <th colspan="3">Teacher</th>
+                    <th colspan="3">Number of TA</th>
+                </tr>
+            </thead>
+            <tr id="search_box">
+                <td colspan="12">
+                <input type="text" class="form-control" id="course-table-filter" data-action="filter" data-filters="#course-table" placeholder="Filter Courses" /></td>
+            </tr>
+            {% for course in courses %}
+            <tr>
+                <td colspan="2">{{ course.course_no }}</td>
+                <td colspan="4">{{ course.course_name }}</td>
+                <td colspan="3">{% for faculty in course.faculties.all %}
+                        {{ faculty }}<br/>
+                    {% endfor %}
+                </td>
+                <td colspan="3" >
+                    <div  class="form-group">
+                    <select multiple="multiple" class="id_tas form-control col-md-1" id="id_tas" name="tas" tabindex="-1" style="width: 300px">
+                    {%for ta in tas %}
+                        {% if ta in course.tas.all %}
+                            <option value="{{ ta.id }}" selected>{{ ta.get_full_name }}</option>
+                        {% else %}
+                            <option value="{{ ta.id }}">{{ ta.get_full_name }}</option>
+                        {% endif %}
+                    {% endfor %}
+                    </select>
+                    <button class="btn btn-primary col-md-offset-1 col-md-3" type="submit" value="Save" >Save</button>
+                </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        <h4><br/>There is no class available at the moment. Contact admin to add courses</h4>
+    </div>
+
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block page_title %}TA Assignment Form - Admin Homepage{% endblock %}
+
+{% block content %}
+
+<script type="text/javascript" src="{{ STATIC_URL }}select2-3.4.6/select2.js"></script>
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}select2-3.4.6/select2-bootstrap.css">
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}select2-3.4.6/select2.css">
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#id_faculties").select2({
+            placeholder: "Type in to select a teacher",
+            allowClear: true
+        });
+        $("#id_tas").select2({
+            placeholder: "Type in to select a TA",
+            allowClear: true
+        });
+    })
+</script>
+
+<form role="form" method="post" style="width: 50%; margin: 0 auto;" >
+    {% csrf_token %}
+    {{ course_form.errors }}
+    {{ course_form.non_field_errors }}
+    <h3 class="text-center text-dark-green" style="border-bottom: 1px solid #76ad2d; padding-bottom:10px">{{ title }}</h3>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="text-dark-green ">
+                Course
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                {{ course_form.course_no }}
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="form-group">
+                {{ course_form.course_name }}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="text-dark-green">
+                {{ course_form.faculties.label }}
+            </div>
+        </div>
+        <div class="col-md-8 form-group">
+            {{ course_form.faculties }}
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-md-4">
+            <div class="text-dark-green">
+                {{ course_form.tas.label }}
+            </div>
+        </div>
+        <div class="col-md-8 form-group">
+            {{ course_form.tas }}  
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-xs-12 col-md-6">
+            <input type="submit" value="Save" class="btn btn-primary btn-block" tabindex="7">
+        </div>
+        <div class="col-xs-12 col-md-6">
+            <a href="/admin" class="btn btn-default btn-block">Cancel</a>
+        </div>
+    </div>
+    
+</form>
+{% endblock %}
