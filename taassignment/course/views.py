@@ -1,10 +1,12 @@
-from django.shortcuts import render
+import time
+from django.contrib import messages
+from django.shortcuts import render, render_to_response
 from django.db import IntegrityError
 from django.http import HttpResponseRedirect
 from django.contrib.auth import decorators
 from taassignment.course.models import Course
 from taassignment.users.models import User
-from taassignment.course.forms import UploadFileForm
+from taassignment.course.forms import UploadFileForm, ErrorForm
 from django.db.models import Count, Min
 #from django.contrib.auth.models import User
 from django.conf import settings
@@ -14,8 +16,8 @@ import csv
 # Course view of the pag
 def teacher_view_list(request):
     current_user  = request.user
- #   courses       = Course.objects.all().filter(faculties__username=current_user.username).annotate(total=Count('tas')).order_by('course_name')
-    courses       = Course.objects.all().annotate(total=Count('tas')).order_by('course_name')
+    courses       = Course.objects.all().filter(faculties__username=current_user.username).annotate(total=Count('tas')).order_by('course_name')
+#    courses       = Course.objects.all().annotate(total=Count('tas')).order_by('course_name')
     no_of_courses = len(courses)
 
     return render(request, "course/teacher_view_list.html", {
@@ -24,65 +26,73 @@ def teacher_view_list(request):
         "has_courses" : courses
         })
 
-def request_csv_tas_upload(f):
+def error_message(request):
+        form = ErrorForm()
+        return render(request,'admin/error_message.html', {})
+
+def request_csv_tas_upload(request,f):
     #    User.objects.filter(is_ta = True).delete()
-#    f = open(file,'r')
-    for r in csv.reader(f):
-        user = User()
+    #    f = open(file,'r')
+    for r in csv.reader(f, delimiter=',',quotechar='"'):
+        user_exits = User.objects.all().filter(username=format(Oidn))
         Oidn = r
         try:
-            user.username = format(*Oidn)
-            user.is_ta  = 1
-            user.is_active = 1
-            user.save()
-        except NameError:
-            pass
-        except IntegrityError:
-            pass            
+            if user_exists :
+                user = User()
+                user.username = format(*Oidn)
+                user.is_ta  = 1
+                user.is_active = 1
+                user.save()
 
-def request_csv_courses_upload(f):
+def request_csv_courses_upload(request,f):
 #    course.objects.filter(is_faculty = True).delete()
 #    f = open(file,'r')
-    for r in csv.reader(f):
+    for r in csv.reader(f, delimiter=',',quotechar='"'):
+        course_no, course_name, Oidn = r
         try:
-            course = Course()
-            course_no, course_name, Oidn = r
-            course.course_no = format(course_no)
-            course.course_name = format(course_name)
-            course.save()
-            user = User()
-            user.username  = format(Oidn)
-            user.is_faculty = 1
-            user.is_active = 1
-            user.save()
-            course.faculties.course_id  = format(course_no)
-            course.faculties.add(user)
-            course.save()
-        except NameError:
-            pass
-        except IntegrityError:
-            pass
+            course_exits = course.objects.all().filter(course_no=course_no)
+            user_exits = user.objects.all().filter(username=format(Oidn))
+            if course_exists :
+                course = Course()
+                course.course_no = course_no
+                course.course_name = format(course_name)
+                course.save()
+                user_exits = User.objects.all().filter(username=format(Oidn))
+            if user_exists :
+                user = User()
+                user.username  = format(Oidn)
+                user.is_faculty = 1
+                user.is_active = 1
+                user.save()
+            if user_exists and course_exists:
+                course.faculties.course_id  = course_no
+                course.faculties.add(user)
+                course.save()
 
     # Upload Courses
 def upload_courses(request):
+    global url
+    url = '/admin/'
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
-#            form.save()
-            request_csv_courses_upload(request.FILES['file'])
-            return HttpResponseRedirect('/admin/')
+            #            form.save()
+            request_csv_courses_upload(request,request.FILES['file'])
+            return HttpResponseRedirect(url)
     else:
         form = UploadFileForm()
         return render(request,'admin/upload_courses_import.html', {'form': form})
 
 # Upload Tas
 def upload_tas(request):
+    global url
+    url = '/admin/'
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
-#            form.save()
-            request_csv_tas_upload(request.FILES['file'])
-            return HttpResponseRedirect('/admin/')
+            #            form.save()
+            request_csv_tas_upload(request,request.FILES['file'])
+            return HttpResponseRedirect(url)
     else:
         form = UploadFileForm()
         return render(request,'admin/upload_tas_import.html', {'form': form})
