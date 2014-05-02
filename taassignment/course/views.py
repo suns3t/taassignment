@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 
 from taassignment.course.models import Course 
 from taassignment.users.models import User 
-from .forms import CourseForm
+from .forms import CourseForm, TaForm
 
 def public_view_list(request):
     courses = Course.objects.all()
@@ -23,11 +23,28 @@ def faculty_view_list(request):
     no_of_course = courses.count()
     tas = User.objects.filter(is_ta=True)
 
+    if request.POST:
+        try:
+            for course in courses:
+                courseid = course.id 
+                tag = 'tas_' + str(courseid)
+                if request.POST.get(tag, False):
+                    new_tas_id = request.POST.getlist(tag)
+                    old_tas_id = User.objects.filter(tas__id=courseid)
+
+                    for old_ta in old_tas_id:
+                        course.tas.remove(old_ta)
+                    for new_ta in new_tas_id:
+                        course.tas.add(User.objects.get(id=new_ta))
+        except:
+            pass
+
     return render(request, "course/faculty_view_list.html", {
         "courses" : courses,
         "has_courses" : no_of_course,
         "tas" : tas,
     })
+
 
 @decorators.login_required
 def staff_add_course(request):

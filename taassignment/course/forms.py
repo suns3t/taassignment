@@ -42,3 +42,27 @@ class CourseForm(forms.ModelForm):
             'faculties',
             'tas'
         )
+
+class TaForm(forms.ModelForm):
+    tas = forms.MultipleChoiceField(label="TA", required=False)
+
+    def __init__(self, courseid, *args, **kwargs):
+        super(TaForm, self).__init__(*args, **kwargs)
+
+        list_of_tas = User.objects.filter(is_ta=True).values('id','first_name', 'last_name')
+        tas_choices = tuple((str(faculty['id']), str(faculty['first_name']) + ' ' + str(faculty['last_name'])) for faculty in list_of_tas)
+        self.fields['tas'] = forms.MultipleChoiceField(label="TA", required=False, choices=tas_choices)
+        self.fields['tas'].widget.attrs['class'] = 'form-control is_tas'
+    
+    def clean_tas(self):
+        tas = self.cleaned_data.get('tas')
+
+        return User.objects.filter(id__in=tas)
+
+    class Meta:
+        model = Course 
+        fields = (
+            'tas',
+        )
+
+
