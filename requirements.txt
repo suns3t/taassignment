@@ -1,4 +1,0 @@
-Django
-MySQL-python
-wsgiref
--e git://github.com/mdj2/djangocas.git#egg=djangocas

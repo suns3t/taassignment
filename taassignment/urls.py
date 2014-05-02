@@ -2,17 +2,13 @@ from django.conf.urls import patterns, include, url
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.conf import settings
-
 from taassignment.course import views as course
 from taassignment.users import views as user
 admin.autodiscover()
 
 urlpatterns = patterns('',
-	
 	url(r'^$', course.public_view_list , name='home'),
     url(r'^admin/$', user.staff_view_list, name='staff-home'),
-    url(r'^error/', course.error_message, name='error'),
-    url(r'^teacher/',course.teacher_view_list, name='teachers' ),
     url(r'^teacher/',course.teacher_view_list, name='teachers' ),
     url(r'^upload_tas/',course.upload_tas, name='upload-tas' ),
     url(r'^upload_courses/',course.upload_courses, name='upload-courses' ),

@@ -3,10 +3,13 @@
 
 {% block content %}
 <h3> Upload TAs CSV File </h3>
+{% if error %}
+<p>{{ error }}</p
+{% endif %}
 <form enctype="multipart/form-data" action"/upload/" name="UploadTAsImport" method="post">
     {% csrf_token %}
     {{ form }}
     <input id="signUpSubmit" type="submit" value="Submit">
-     <a href="#" onclick="showFileName()">Show Name</a>
+    <input id="signUpReset" type="reset" value="Reset">
 </form>
 {% endblock %}
