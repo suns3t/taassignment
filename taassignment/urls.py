@@ -17,6 +17,9 @@ urlpatterns = patterns('',
     url(r'^admin/add_user$', user.staff_add_user, name='staff-add-user'),
     url(r'^admin/edit_user/(?P<userid>\w{0,5})$' , user.staff_edit_user, name='staff-edit-user'),
     url(r'^admin/delete_user/(?P<userid>\w{0,5})$', user.staff_delete_user, name='staff-delete-user'),
+    url(r'^admin/add_course$', course.staff_add_course, name='staff-add-course'),
+    url(r'^admin/edit_course/(?P<courseid>\w{0,5})$' , course.staff_edit_course, name='staff-edit-course'),
+    url(r'^admin/delete_course/(?P<courseid>\w{0,5})$', course.staff_delete_course, name='staff-delete-course'),
     url(r'^faculty/', course.faculty_view_list, name='faculty-home'),
 )
 

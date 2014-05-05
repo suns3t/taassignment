@@ -4,10 +4,10 @@
 
 {% block content %}
 
-<form role="form" method="post">
+<form role="form" method="post" style="width: 50%; margin: 0 auto;" >
     {% csrf_token %}
     {{ user_form.errors }}
-    <h3 class="text-center text-dark-green" style="border-bottom: 1px solid #76ad2d; padding-bottom:10px">Add new user</h3>
+    <h3 class="text-center text-dark-green" style="border-bottom: 1px solid #76ad2d; padding-bottom:10px">{{ title }}</h3>
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">
