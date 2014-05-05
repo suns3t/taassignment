@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block page_title %}Main Page - TA Assignment Form{% endblock %}
+
+{% block content %}
+	{% if has_courses %}
+	<table>
+		<thead>
+			<tr>
+				<th>Course no.</th>
+				<th>Course name</th>
+                <th>Teacher</th>
+                <th>Ta</th>
+                <th>No Course</th>
+			</tr>
+		</thead>
+		{% for course in courses %}
+		<tr>
+			<td>{{ course.course_no }}</td>
+            <td>{{ course.course_name }}</td>
+            <td>{{ course.teacher }}</td>
+            <td>{{ course.ta }}</td>
+		</tr>
+		{% endfor %}
+	</table>
+    {% block content_total %}{{ no_of_courses }}{% endblock %}
+	{% else %}
+	<h4>There is no class available at the moment. Contact admin to add courses</h4>
+	{% endif %}
+{% endblock %}

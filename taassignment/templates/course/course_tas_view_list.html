@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block page_title %}Teacher's - TAs Assign to Course{% endblock %}
+
+{% block content %}
+	{% if has_courses %}
+	<table border=1 style="width:95%">
+		<thead>
+			<tr>
+				<th>No.</th>
+				<th>Course name</th>
+				<th>Teacher</th>
+				<th>Total</th>
+				<th>TAs Name</th>
+			</tr>
+		</thead>
+		{% for course in courses %}
+		<tr>
+			<td>{{ course.course_no }}</td>
+            <td>{{ course.course_name }}</td>
+		    {% for teacher in course.faculties.all %}
+            <td>{{ teacher.first_name}} {{teacher.last_name }}</td>
+            {% endfor %}
+            <td>{{ course.total }}</td>
+            <td> <table border=1 style="width:50%">
+		    {% for ta in course.tas.all %}
+            <tr>
+            <td>{{ ta.first_name}} {{ta.last_name }}</td>
+            </tr>
+            {% endfor %}
+		</tr>
+       </table> </td>
+		{% endfor %}
+	</table>
+    <h4>Total   :{{ no_of_courses }}</h4>
+	{% else %}
+	<h4>There is no class available at the moment. Contact admin to add courses</h4>
+	{% endif %}
+{% endblock %}
