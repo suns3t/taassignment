@@ -41,10 +41,8 @@ def upload_courses(request):
                     _request_csv_courses_upload(request.FILES['file'])
             except (TypeError, ValueError) :
                 error='Wrong file type, number of columns do not mach!'
-                form = UploadFileForm()
             except Exception as e:
                 error= '%s (%s)' % (e.message, type(e))
-                form = UploadFileForm()
             else:
                 return HttpResponseRedirect(reverse("staff-home"))
     else:
@@ -63,10 +61,8 @@ def upload_tas(request):
                     _request_csv_tas_upload(request.FILES['file'])
             except (TypeError, ValueError) :
                 error='Wrong file type, number of columns do not mach!'
-                form = UploadFileForm()
             except Exception as e:
                 error= '%s (%s)' % (e.message, type(e))
-                form = UploadFileForm()
             else:  
                 return HttpResponseRedirect(reverse("staff-home"))
     else:
