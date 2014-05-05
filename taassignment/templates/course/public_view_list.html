@@ -5,10 +5,13 @@
 {% block content %}
 <script type="text/javascript" src="{{ STATIC_URL }}bootstrap-3.1.1-dist/js/panel.js"></script>
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}bootstrap-3.1.1-dist/css/panel.css">
-<<<<<<< HEAD
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}bootstrap-3.1.1-dist/css/sidebar.css">
+	
 	<h2>Title</h2>
 	<h3>Introduction goes here!</h3>
 	{% if has_courses %}
+	<div class="panel panel-primary">
+		<div class="panel-body">
 		<table class="table table-hover" id="course-table">
 			<thead class="text-dark-green">
 				<tr>
@@ -27,7 +30,7 @@
 				<td>{{ course.course_no }}</td>
 				<td>{{ course.course_name }}</td>
 	            <td>{% for faculty in course.faculties.all %}
-	                    {{ faculty }}, 
+	                    {{ faculty }}<br/>
 	                {% endfor %}
 	            </td>
 	            <td>{{ course.tas.count }}</td>
@@ -35,7 +38,9 @@
 			{% endfor %}
 		</table>
 		{% else %}
-		<h4>There is no class available at the moment. Contact admin to add courses</h4>
+		</div>
 	</div>
+		<h4>There is no class available at the moment. Contact admin to add courses</h4>
+
     {% endif %}
 {% endblock %}

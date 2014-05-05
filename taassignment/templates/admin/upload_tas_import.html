@@ -2,13 +2,26 @@
 {% block page_title %}Teacher's - TAs Upload TAs CSV File{% endblock %}
 
 {% block content %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#id_form_upload').submit(function() {return true;})
+
+        $('#id_file').on('change', function(){
+            $('#id_form_upload').trigger('submit')
+        })
+    })
+</script>
 <h3> Upload TAs CSV File </h3>
-<form enctype="multipart/form-data" action"/upload/" name="UploadTAsImport" method="post">
+<form enctype="multipart/form-data" name="UploadTAsImport" method="post" id="id_form_upload">
     {% csrf_token %}
-    {{ form }}
     {% if error %}
     <div class="alert alert-danger">{{ error }}</div>
     {% endif %}
-    <input id="signUpSubmit" type="submit" value="Submit">
+    <span class="btn btn-file btn-primary">
+        Browse {{ form.file }}
+    </span>
+    <span class="btn btn-default">
+        <a href="/admin">Cancel</a>
+    </span>
 </form>
 {% endblock %}

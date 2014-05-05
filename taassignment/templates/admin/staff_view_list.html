@@ -5,16 +5,17 @@
 {% block content %}
 <script type="text/javascript" src="{{ STATIC_URL }}bootstrap-3.1.1-dist/js/panel.js"></script>
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}bootstrap-3.1.1-dist/css/panel.css">
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}bootstrap-3.1.1-dist/css/sidebar.css">
 
 <div class="container">
     <h3>You as an admin can add or change any class and TAs here!</h3>
-    <div class="row">
-        <div class="col-md-6">
+    <!-- <div class="row"> -->
+        <div class="col-md-5">
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h3 class="panel-title">Courses</h3>
                     <div class="pull-right">
-                        <span class="clickable">Import Course <i class="glyphicon glyphicon-cloud-upload"></i></span>
+                        <span class="clickable"><a href="/admin/upload_courses">Import Course <i class="glyphicon glyphicon-cloud-upload"></i></a></span>
                         <span class="clickable"><a href="/admin/add_course">Add Course</a><i class="glyphicon glyphicon-plus"></i>
                         </span> 
                     </div>
@@ -67,12 +68,12 @@
             </div>
         </div>
         
-        <div class="col-md-6">
+        <div class="col-md-5">
             <div class="panel panel-primary filterable">
                 <div class="panel-heading">
                     <h3 class="panel-title">Users</h3>
                     <div class="pull-right">
-                        <span class="clickable">Import TA <i class="glyphicon glyphicon-cloud-upload"></i></span>
+                        <span class="clickable"><a href="/admin/upload_tas">Import TA <i class="glyphicon glyphicon-cloud-upload"></i></a></span>
                         <span class="clickable add_user"><a href="/admin/add_user">Add User</a><i class="glyphicon glyphicon-plus"></i>
                         </span> 
                     </div>
@@ -139,7 +140,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    <!-- </div> -->
 </div>
 
 {% endblock %}

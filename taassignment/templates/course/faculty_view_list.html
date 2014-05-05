@@ -20,6 +20,14 @@
 </script>
     <h2>Title</h2>
     <h3>Introduction goes here!</h3>
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-success">
+                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+                {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}
         {% if has_courses %}
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}

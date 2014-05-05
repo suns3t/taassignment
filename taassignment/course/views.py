@@ -5,12 +5,11 @@ from django.contrib import messages
 from django.shortcuts import render, get_object_or_404
 from django.db import IntegrityError
 from django.core.urlresolvers import reverse
-<<<<<<< HEAD
+from django.contrib import messages
 
 from taassignment.course.models import Course 
 from taassignment.users.models import User 
-from .forms import CourseForm, TaForm
-=======
+from .forms import CourseForm
 from django.http import HttpResponseRedirect
 from django.contrib.auth import decorators
 from taassignment.course.models import Course
@@ -20,19 +19,6 @@ from django.db.models import Count, Min
 from django.conf import settings
 from .forms import CourseForm
 import csv
-
-
-# Course view of the pag
-def teacher_view_list(request):
-    current_user  = request.user
-    courses       = Course.objects.all().filter(faculties__username=current_user.username).annotate(total=Count('tas')).order_by('course_name')
-    no_of_courses = len(courses)
-
-    return render(request, "course/teacher_view_list.html", {
-        "courses" : courses,
-        "no_of_courses" : no_of_courses,
-        "has_courses" : courses
-        })
 
 
 
@@ -75,34 +61,8 @@ def upload_tas(request):
         form = UploadFileForm()
     return render(request,'admin/upload_tas_import.html', {'form': form, "error": error})
 
->>>>>>> 8dab4296f3ff6a6069a301417af9cf7b7c7f4b57
 
-
-# Course view of the pag
-def course_teacher_view_list(request):
-    courses       = Course.objects.all().filter(faculties__username=request.GET['username']).annotate(total=Count('tas')).order_by('course_name')
-    no_of_courses = len(courses)
-
-    return render(request, "course/course_tas_view_list.html", {
-        "courses" : courses,
-        "no_of_courses" : no_of_courses,
-        "has_courses" : courses
-        })
-
-
-# Course view of the pag
-def course_tas_view_list(request):
-    courses       = Course.objects.all().filter(course_no=request.GET['course']).annotate(total=Count('tas')).order_by('course_name')
-    no_of_courses = len(courses)
-
-    return render(request, "course/course_tas_view_list.html", {
-        "courses" : courses,
-        "no_of_courses" : no_of_courses,
-        "has_courses" : courses
-        })
-
-
-    # Public view of the page, also act as homepage
+# Public view of the page, also act as homepage
 def public_view_list(request):
     courses = Course.objects.all()
     no_of_course = Course.objects.count()
@@ -112,7 +72,7 @@ def public_view_list(request):
         "has_courses" : no_of_course ,
     })
 
-    # Faculty home page
+# Faculty home page
 @decorators.permission_required('course.change_ta',raise_exception=True)
 def faculty_view_list(request):
     courses = Course.objects.filter(faculties=request.user)
@@ -124,7 +84,7 @@ def faculty_view_list(request):
             for course in courses:
                 courseid = course.id 
                 tag = 'tas_' + str(courseid)
-                if request.POST.get(tag, False):
+                if request.POST.getlist(tag):
                     new_tas_id = request.POST.getlist(tag)
                     old_tas_id = User.objects.filter(tas__id=courseid)
 
@@ -132,12 +92,16 @@ def faculty_view_list(request):
                         course.tas.remove(old_ta)
                     for new_ta in new_tas_id:
                         course.tas.add(User.objects.get(id=new_ta))
+                    
+            messages.success(request, "TA information is updated.")
+            
         except:
             pass
 
     return render(request, "course/faculty_view_list.html", {
         "courses" : courses,
         "has_courses" : no_of_course,
+        "tas" : tas,
         })
 
 
