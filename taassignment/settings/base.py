@@ -81,8 +81,8 @@ if USE_CAS:
 ## end CAS authentication setting
 
 # LDAP support
-LDAP_URL = "ldap://ldap.oit.pdx.edu"
-LDAP_BASE_DN = 'dc=pdx,dc=edu'
+LDAP_URL = "ldap://ldap-batch.oit.pdx.edu"
+LDAP_BASE_DN = 'oc=people,dc=pdx,dc=edu'
 
 ROOT_URLCONF = 'taassignment.urls'
 

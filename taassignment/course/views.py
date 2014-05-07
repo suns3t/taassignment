@@ -72,8 +72,7 @@ def public_view_list(request):
         "has_courses" : no_of_course ,
     })
 
-# Faculty home page
-@decorators.permission_required('course.change_ta',raise_exception=True)
+
 def faculty_view_list(request):
     courses = Course.objects.filter(faculties=request.user)
     no_of_course = courses.count()
