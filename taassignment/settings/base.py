@@ -69,6 +69,7 @@ USE_CAS = True
 if USE_CAS:
     CAS_SERVER_URL = 'https://sso.pdx.edu/cas/'
 
+
     AUTHENTICATION_BACKENDS = (
         'django.contrib.auth.backends.ModelBackend',
         'taassignment.backends.PSUBackend',

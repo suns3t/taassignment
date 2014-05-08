@@ -1,14 +1,15 @@
 from django.shortcuts import render, get_object_or_404
-from django.contrib.auth import decorators
+from djangocas.decorators import user_passes_test
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
 from taassignment.course.models import Course
 from taassignment.users.models import User
 from .forms import UserForm
+from taassignment.perm import admin_member_check
 
 # Create your views here.
-@decorators.login_required
+@user_passes_test(admin_member_check, login_url="/accounts/login")
 def staff_view_list(request):
     courses = Course.objects.all()
     users = User.objects.all()
@@ -22,7 +23,7 @@ def staff_view_list(request):
     })
 
 
-@decorators.login_required
+@user_passes_test(admin_member_check, login_url="/accounts/login")
 def staff_add_user(request):
     title = "Add New User"
 
@@ -39,7 +40,7 @@ def staff_add_user(request):
         'title' : title,
     })
 
-@decorators.login_required
+@user_passes_test(admin_member_check, login_url="/accounts/login")
 def staff_edit_user(request, userid):
     user = get_object_or_404(User, pk=userid)
     title = "Edit Existing User"
@@ -57,7 +58,7 @@ def staff_edit_user(request, userid):
         'title' : title
     })
 
-@decorators.login_required
+@user_passes_test(admin_member_check, login_url="/accounts/login")
 def staff_delete_user(request, userid):
     user = get_object_or_404(User, pk=userid)
     title = "Deleting User"

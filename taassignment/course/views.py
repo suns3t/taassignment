@@ -7,11 +7,13 @@ from django.db import IntegrityError
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 
+from djangocas.decorators import user_passes_test
+from taassignment.perm import faculty_member_check, admin_member_check, ta_member_check
+
 from taassignment.course.models import Course 
 from taassignment.users.models import User 
 from .forms import CourseForm
 from django.http import HttpResponseRedirect
-from django.contrib.auth import decorators
 from taassignment.course.models import Course
 from taassignment.users.models import User
 from taassignment.course.forms import UploadFileForm
@@ -23,6 +25,7 @@ import csv
 
 
 # Upload Courses
+@user_passes_test(admin_member_check, login_url="/accounts/login")
 def upload_courses(request):
     error = None
     if request.method == 'POST':
@@ -43,6 +46,7 @@ def upload_courses(request):
 
 
 # Upload Tas
+@user_passes_test(admin_member_check, login_url="/accounts/login")
 def upload_tas(request):
     error = None
     if request.method == 'POST':
@@ -73,6 +77,7 @@ def public_view_list(request):
     })
 
 
+@user_passes_test(faculty_member_check, login_url='/accounts/login')
 def faculty_view_list(request):
     courses = Course.objects.filter(faculties=request.user)
     no_of_course = courses.count()
@@ -143,7 +148,7 @@ def _request_csv_courses_upload(f):
 
 
 
-@decorators.login_required
+@user_passes_test(admin_member_check, login_url="/accounts/login")
 def staff_add_course(request):
     title = "Add New Course"
 
@@ -163,7 +168,7 @@ def staff_add_course(request):
         'title' : title,
     })
 
-@decorators.login_required
+@user_passes_test(admin_member_check, login_url="/accounts/login")
 def staff_edit_course(request, courseid):
     course = get_object_or_404(Course, pk=courseid)
     title = "Edit Existing Course"
@@ -184,7 +189,7 @@ def staff_edit_course(request, courseid):
         'title' : title,
     })
 
-@decorators.login_required
+@user_passes_test(admin_member_check, login_url="/accounts/login")
 def staff_delete_course(request, courseid):
     course = get_object_or_404(Course, pk=courseid)
     
