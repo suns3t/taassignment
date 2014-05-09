@@ -12,67 +12,64 @@
 <script type="text/javascript">
    
     $(document).ready(function() {
-        $(".id_tas").select2({
+        $(".multi_select").select2({
             placeholder: "Type in to select a TA",
             allowClear: true,
         });
    })    
 </script>
-    <h3>Your current classes</h3>
-    <p>Introduction goes here!</p>
-        {% if messages %}
-            {% for message in messages %}
-            <div class="alert alert-success">
-                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
-                {{ message }}
-            </div>
-            {% endfor %}
-        {% endif %}
+    <h3 class="text-dark-green">Faculty Homepage</h3>
+    <p>In this page, you can add, edit or delete TA for each of your class.</p>
+    <p>When you are finish editing TA for all the classes, simply click the <b>Save</b> button to save all the changes or click <b>Cancel</b> button to go back</p>
+       
         {% if has_courses %}
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            <table class="table table-hover" id="course-table">
-                <thead class="text-dark-green">
-                    <tr>
-                        <th class="col-md-2">Course no.</th>
-                        <th class="col-md-4">Course name</th>
-                        <th class="col-md-3">Teacher</th>
-                        <th class="col-md-3">Number of TA</th>
-                    </tr>
-                </thead>
-                <tr id="search_box">
-                    <td colspan="12">
-                    <input type="text" class="form-control" id="course-table-filter" data-action="filter" data-filters="#course-table" placeholder="Filter Courses" /></td>
-                </tr>
-                {% for course in courses %}
-                <tr>
-                    <td class="col-md-2">{{ course.course_no }}</td>
-                    <td class="col-md-4">{{ course.course_name }}</td>
-                    <td class="col-md-3">{% for faculty in course.faculties.all %}
-                            {{ faculty }}<br/>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Your current classes</h3>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover" id="course-table">
+                        <thead class="text-dark-green">
+                            <tr>
+                                <th class="col-md-2">Course no.</th>
+                                <th class="col-md-3">Course name</th>
+                                <th class="col-md-3">Teacher</th>
+                                <th class="col-md-4">Number of TA</th>
+                            </tr>
+                        </thead>
+                        <tr id="search_box">
+                            <td colspan="4">
+                            <input type="text" class="form-control" id="course-table-filter" data-action="filter" data-filters="#course-table" placeholder="Filter Courses" /></td>
+                        </tr>
+                        {% for course in courses %}
+                        <tr>
+                            <td class="col-md-2">{{ course.course_no }}</td>
+                            <td class="col-md-3">{{ course.course_name }}</td>
+                            <td class="col-md-3">{% for faculty in course.faculties.all %}
+                                    {{ faculty }}<br/>
+                                {% endfor %}
+                            </td>
+                            <td class="col-md-4">
+                                <div  class="form-group">
+                                    {{ course.form_field }}
+                                </div>
+                            </td>
+                        </tr>
                         {% endfor %}
-                    </td>
-                    <td class="col-md-3">
-                        <div  class="form-group">
-                            <select multiple="multiple" class="id_tas form-control col-md-1" id="id_tas" name="tas_{{ course.id }}" tabindex="-1" style="width: 300px">
-                            {%for ta in tas %}
-                                {% if ta in course.tas.all %}
-                                    <option value="{{ ta.id }}" selected>{{ ta.get_full_name }}</option>
-                                {% else %}
-                                    <option value="{{ ta.id }}">{{ ta.get_full_name }}</option>
-                                {% endif %}
-                            {% endfor %}
-                            </select>
-                            
-                        </div>
-                    </td>
-                </tr>
-                {% endfor %}
-            </table>
-            <button class="btn btn-primary" type="submit" value="Save" >Save</button>
-        </form>
+                    </table>
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-xs-4 col-md-2">
+                    <input type="submit" value="Save" class="btn btn-primary btn-block" tabindex="7">
+                </div>
+            </div>
+            </form>
         {% else %}
-        <h4><br/>There is no class available at the moment. Contact admin to add courses</h4>
+    <div class="alert alert-info">
+        There is no class available at the moment. Contact admin to add courses.
     </div>
 
     {% endif %}

@@ -6,24 +6,19 @@ class UploadFileForm(forms.Form):
     file  = forms.FileField()
 
 class CourseForm(forms.ModelForm):
-
-    course_no = forms.CharField(required=True, widget=forms.TextInput(attrs={'placeholder': 'Course No.', 'class' : 'form-control'}))
+       
+    course_no = forms.CharField(label="Course", required=True, widget=forms.TextInput(attrs={'placeholder': 'Course No.', 'class' : 'form-control'}))
     course_name = forms.CharField(required=True, widget=forms.TextInput(attrs={'placeholder': 'Course Name', 'class' : 'form-control'}))
-    faculties = forms.MultipleChoiceField(label="Teacher", required=True)
-    tas = forms.MultipleChoiceField(label="TA", required=False)
+    
+    list_of_faculties = User.objects.filter(is_faculty=True)
+    list_of_tas = User.objects.filter(is_ta=True)
 
+    faculties = forms.ModelMultipleChoiceField(label="Teacher", required=True, queryset=list_of_faculties)
+    tas = forms.ModelMultipleChoiceField(label="TA", required=False, queryset=list_of_tas)
 
     def __init__(self, *args, **kwargs):
         super(CourseForm, self).__init__(*args, **kwargs)
-
-        list_of_faculties = User.objects.filter(is_faculty=True).values('id','first_name', 'last_name')
-        faculties_choices = tuple((str(faculty['id']), str(faculty['first_name']) + ' ' + str(faculty['last_name'])) for faculty in list_of_faculties)
-
-        list_of_tas = User.objects.filter(is_ta=True).values('id','first_name', 'last_name')
-        tas_choices = tuple((str(faculty['id']), str(faculty['first_name']) + ' ' + str(faculty['last_name'])) for faculty in list_of_tas)
-
-        self.fields['faculties'] = forms.MultipleChoiceField(label="Teacher", required=True, choices=faculties_choices)
-        self.fields['tas'] = forms.MultipleChoiceField(label="TA", required=False, choices=tas_choices)
+       
         self.fields['faculties'].widget.attrs['class'] = 'form-control'
         self.fields['tas'].widget.attrs['class'] = 'form-control'
 

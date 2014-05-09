@@ -19,7 +19,7 @@ from taassignment.users.models import User
 from taassignment.course.forms import UploadFileForm
 from django.db.models import Count, Min
 from django.conf import settings
-from .forms import CourseForm
+from taassignment.users.forms import SelectionForm
 import csv
 
 
@@ -39,6 +39,7 @@ def upload_courses(request):
             except Exception as e:
                 error= '%s (%s)' % (e.message, type(e))
             else:
+                messages.success(request, "CSV file is uploaded. New courses are added!")
                 return HttpResponseRedirect(reverse("staff-home"))
     else:
         form = UploadFileForm()
@@ -60,6 +61,7 @@ def upload_tas(request):
             except Exception as e:
                 error= '%s (%s)' % (e.message, type(e))
             else:  
+                messages.success(request, "CSV file is uploaded. New TAs are added!")
                 return HttpResponseRedirect(reverse("staff-home"))
     else:
         form = UploadFileForm()
@@ -84,30 +86,77 @@ def faculty_view_list(request):
     tas = User.objects.filter(is_ta=True)
 
     if request.POST:
-        try:
-            for course in courses:
-                courseid = course.id 
-                tag = 'tas_' + str(courseid)
-                if request.POST.getlist(tag):
-                    new_tas_id = request.POST.getlist(tag)
-                    old_tas_id = User.objects.filter(tas__id=courseid)
-
-                    for old_ta in old_tas_id:
-                        course.tas.remove(old_ta)
-                    for new_ta in new_tas_id:
-                        course.tas.add(User.objects.get(id=new_ta))
-                    
+        form = SelectionForm(request.POST, user=request.user)
+        if form.is_valid():
+            form.save()          
             messages.success(request, "TA information is updated.")
-            
-        except:
-            pass
-
+            return HttpResponseRedirect(request.get_full_path())
+    else:
+        form = SelectionForm(user=request.user)
+    for course in courses:
+        course.form_field = form[str(course.pk)]
+    
     return render(request, "course/faculty_view_list.html", {
         "courses" : courses,
         "has_courses" : no_of_course,
-        "tas" : tas,
         })
 
+@user_passes_test(admin_member_check, login_url="/accounts/login")
+def staff_add_course(request):
+    title = "Add New Course"
+
+    if request.POST:
+        course_form = CourseForm(request.POST)
+        if course_form.is_valid():
+            course = course_form.save(commit=False)
+            course.save()
+            course_form.save_m2m()
+            messages.success(request, "New course added!")
+
+            return HttpResponseRedirect(reverse('staff-home'))
+    else:
+        course_form = CourseForm()
+
+    return render(request, 'admin/staff_add_course.html', {
+        'course_form' : course_form,
+        'title' : title,
+    })
+
+@user_passes_test(admin_member_check, login_url="/accounts/login")
+def staff_edit_course(request, courseid):
+    course = get_object_or_404(Course, pk=courseid)
+    title = "Edit Existing Course"
+
+    if request.POST:
+        course_form = CourseForm(request.POST, instance=course)
+        if course_form.is_valid():
+            course = course_form.save(commit=False)
+            course.save()
+            course_form.save_m2m()
+            messages.success(request, "Edit course saved!")
+
+            return HttpResponseRedirect(reverse('staff-home'))
+    else:
+        course_form = CourseForm(instance=course)
+
+    return render(request, 'admin/staff_add_course.html', {
+        'course_form' : course_form,
+        'title' : title,
+    })
+
+@user_passes_test(admin_member_check, login_url="/accounts/login")
+def staff_delete_course(request, courseid):
+    course = get_object_or_404(Course, pk=courseid)
+    
+    if request.POST:
+        course.delete()
+
+        messages.success(request, "Course deleted!")
+        return HttpResponseRedirect(reverse('staff-home'))
+
+    return render(request, 'admin/staff_delete_dialog.html', {
+        'course' : course,
+    })
 
 def _request_csv_tas_upload(f):
     for r in csv.reader(f,delimiter=",",quoting=csv.QUOTE_NONNUMERIC):
@@ -147,56 +196,3 @@ def _request_csv_courses_upload(f):
         course.save()
 
 
-
-@user_passes_test(admin_member_check, login_url="/accounts/login")
-def staff_add_course(request):
-    title = "Add New Course"
-
-    if request.POST:
-        course_form = CourseForm(request.POST)
-        if course_form.is_valid():
-            course = course_form.save(commit=False)
-            course.save()
-            course_form.save_m2m()
-
-            return HttpResponseRedirect(reverse('staff-home'))
-    else:
-        course_form = CourseForm()
-
-    return render(request, 'admin/staff_add_course.html', {
-        'course_form' : course_form,
-        'title' : title,
-    })
-
-@user_passes_test(admin_member_check, login_url="/accounts/login")
-def staff_edit_course(request, courseid):
-    course = get_object_or_404(Course, pk=courseid)
-    title = "Edit Existing Course"
-
-    if request.POST:
-        course_form = CourseForm(request.POST, instance=course)
-        if course_form.is_valid():
-            course = course_form.save(commit=False)
-            course.save()
-            course_form.save_m2m()
-
-            return HttpResponseRedirect(reverse('staff-home'))
-    else:
-        course_form = CourseForm(instance=course)
-
-    return render(request, 'admin/staff_add_course.html', {
-        'course_form' : course_form,
-        'title' : title,
-    })
-
-@user_passes_test(admin_member_check, login_url="/accounts/login")
-def staff_delete_course(request, courseid):
-    course = get_object_or_404(Course, pk=courseid)
-    
-    if request.POST:
-        course.delete()
-        return HttpResponseRedirect(reverse('staff-home'))
-
-    return render(request, 'admin/staff_delete_dialog.html', {
-        'course' : course,
-    })

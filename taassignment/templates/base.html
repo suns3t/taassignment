@@ -10,6 +10,7 @@
         <script type="text/javascript" src="{{ STATIC_URL }}bootstrap-3.1.1-dist/js/bootstrap.js"></script>
         <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}bootstrap-3.1.1-dist/css/bootstrap.css">
         <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}bootstrap-3.1.1-dist/css/sidebar.css">
+        <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}bootstrap-3.1.1-dist/css/alert-info.css">
     </head>
     <body>
 
@@ -20,61 +21,65 @@
                 </div>
             </div>
         </div>
-        <div id="wrap" >
+        <div id="wrap" style="min-height: 600px" >
             <div class="container">
                 <div class="col-md-2">
                         <div class="span2" role="navigation">
                             <ul class="nav nav-pills nav-stacked">
                                 <li class="active"><a href="/"><i class="glyphicon glyphicon-home"></i> Home</a></li>
+                                {% if user.is_faculty %}
                                 <li>
                                     <a href="/faculty">
                                         <i class="glyphicon glyphicon-book"></i>
                                          Faculty courses 
-                                        {% if not user.is_faculty %}
-                                        <i class="glyphicon glyphicon-lock"></i>
-                                        {% endif %}
                                     </a>
                                 </li>
+                                {% endif %}
+                                {% if user.is_staff %}
                                 <li>
                                     <a href="/admin">
                                         <i class="glyphicon glyphicon-user"></i>
                                          Admin View 
-                                        {% if not user.is_staff %}
-                                        <i class="glyphicon glyphicon-lock"></i>
-                                        {% endif %}
                                     </a>
-                                 </li>
+                                </li>
+                                {% endif %}
                                 <li class="nav-divider"></li>
                                 {% if user.is_active %}
                                     {% if user.is_staff %}
                                     <li>
                                         <p>Hi, Admin <b class="text-dark-green">{% firstof user.get_full_name %}</b></p>
                                     </li>
-                                    <li>
-                                        <a href="{% url 'account-logout' %}" ><i class="glyphicon glyphicon-log-out"></i> Logout</a>
-                                    </li>
                                     {% elif user.is_faculty %}
                                     <li>
-                                        <p>Hi, Faculty <b>{% firstof user.get_full_name %}</b></p>
+                                        <p>Hi, Faculty <b class="text-dark-green">{% firstof user.get_full_name %}</b></p>
                                     </li>
+                                    {% else %}
+                                    <li>
+                                        <p>Hi, <b class="text-dark-green">{{ user.first_name }} {{ user.last_name }}</b></p>
+                                    {% endif %}
                                     <li>
                                         <a href="{% url 'account-logout' %}" ><i class="glyphicon glyphicon-log-out"></i> Logout</a>
                                     </li>
-                                    {% endif %}
                                 {% else %}
+                                    <li>
+                                        <p>Admin or Faculty?</p>
+                                    </li>
                                     <li>
                                         <a href="{% url 'account-login' %}"><i class="glyphicon glyphicon-log-in"></i> Login</a>
                                     </li>
                                 {% endif %}
-                            </ul>
-                            
+                            </ul> 
                         </div>
                     
                 </div>
                
-                <div class="col-md-10" style="border-left: 1px dotted #439339; padding-left: 20px;">
+                <div class="col-md-10" style="border-left: 1px dotted #439339; padding-left: 20px; padding-bottom: 60px">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
                     {% block content %}{% endblock %}
-                    </div>
                 </div>
             </div>
         </div>

@@ -4,57 +4,59 @@
 
 {% block content %}
 
-<form role="form" method="post" style="width: 50%; margin: 0 auto;" >
+<form role="form" method="post" style="width: 70%" class="form-horizontal">
     {% csrf_token %}
-    {{ user_form.errors }}
-    <h3 class="text-center text-dark-green" style="border-bottom: 1px solid #76ad2d; padding-bottom:10px">{{ title }}</h3>
-    <div class="row">
-        <div class="col-md-6">
-            <div class="form-group">
-                {{ user_form.first_name }}
+    {% if user_form.errors %}
+        <div class="alert alert-danger">
+            {{ user_form.errors }}
+        </div>
+    {% endif %}
+    <h3 class="text-dark-green" >
+        {{ title }}
+    </h3>
+    <p style="border-bottom: 1px solid #76ad2d; padding-bottom:10px">
+        Fill out the information of users in the following boxes
+    </p>
+    <div class="row form-group">
+        <div class="col-md-2">
+            <div class="control-label text-dark-green">
+                {{ user_form.first_name.label_tag }}
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="form-group">
-                {{ user_form.last_name }}
-            </div>
+        <div class="col-md-5">
+            {{ user_form.first_name }}
+        </div>
+        <div class="col-md-5">
+            {{ user_form.last_name }}
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-12 form-group">
+    <div class="row form-group">
+        <div class="col-md-2 control-label text-dark-green">
+            {{ user_form.username.label_tag }}
+        </div>
+        <div class="col-md-6">
             {{ user_form.username }}
         </div>
     </div>
     <div class="row form-group">
-        <div class="col-md-4">
-            <div class="checkbox">
-                <label>
-                    {{ user_form.is_staff }} Staff
-                </label>
-                
-            </div>
+        <div class="col-md-3 control-label text-dark-green">
+            {{ user_form.is_staff }} 
+            {{ user_form.is_staff.label }}
         </div>
-        <div class="col-md-4">
-            <div class="checkbox">
-                <label>
-                    {{ user_form.is_faculty}} Faculty
-                </label>i
-
-            </div>
+        <div class="col-md-3 control-label text-dark-green">
+            {{ user_form.is_faculty}}
+            {{ user_form.is_faculty.label}}
         </div>
-        <div class="col-md-4">
-            <div class="checkbox">
-                <label>
-                    {{ user_form.is_ta }} TA
-                </label>
-            </div>
+         <div class="col-md-3 control-label text-dark-green">
+            {{ user_form.is_ta}}
+            {{ user_form.is_ta.label}}
         </div>
     </div>
     <div class="row form-group">
-        <div class="col-xs-12 col-md-6">
+        <div class="col-xs-6 col-md-6">
             <input type="submit" value="Save" class="btn btn-primary btn-block" tabindex="7">
         </div>
-        <div class="col-xs-12 col-md-6">
+        <div class="col-xs-6 col-md-6">
             <a href="/admin" class="btn btn-default btn-block">Cancel</a>
         </div>
     </div>

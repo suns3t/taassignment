@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from djangocas.decorators import user_passes_test
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from django.contrib import messages
 
 from taassignment.course.models import Course
 from taassignment.users.models import User
@@ -49,6 +50,7 @@ def staff_edit_user(request, userid):
         user_form = UserForm(request.POST, instance=user)
         if user_form.is_valid():
             user_form.save()
+            messages.success(request, "Saved!")
             return HttpResponseRedirect(reverse('staff-home'))
     else:
         user_form = UserForm(instance=user)

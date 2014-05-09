@@ -20,45 +20,37 @@
     })
 </script>
 
-<form role="form" method="post" style="width: 50%; margin: 0 auto;" >
+<form role="form" method="post" style="width: 70%" class="form-horizontal" >
     {% csrf_token %}
-    {{ course_form.errors }}
-    {{ course_form.non_field_errors }}
-    <h3 class="text-center text-dark-green" style="border-bottom: 1px solid #76ad2d; padding-bottom:10px">{{ title }}</h3>
-    <div class="row">
-        <div class="col-md-4">
-            <div class="text-dark-green ">
-                Course
-            </div>
+    {% if course_form.errors %}
+    <div class="alert alert-danger">{{ course_form.errors }}</div>
+    {% endif %}
+    <h3 class="text-dark-green" >{{ title }}</h3>
+    <p style="border-bottom: 1px solid #76ad2d; padding-bottom:10px">Fill out the information of a classes in the following fields</p>
+    <div class="row form-group">
+        <div class="control-label col-md-3 text-dark-green">
+            {{ course_form.course_no.label_tag }}
         </div>
         <div class="col-md-3">
-            <div class="form-group">
-                {{ course_form.course_no }}
-            </div>
+            {{ course_form.course_no }}
         </div>
-        <div class="col-md-5">
-            <div class="form-group">
-                {{ course_form.course_name }}
-            </div>
+        <div class="col-md-6">
+            {{ course_form.course_name }}
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-4">
-            <div class="text-dark-green">
-                {{ course_form.faculties.label }}
-            </div>
+    <div class="row form-group">
+        <div class="control-label col-md-3 text-dark-green">
+            {{ course_form.faculties.label_tag }}
         </div>
-        <div class="col-md-8 form-group">
+        <div class="col-md-9">
             {{ course_form.faculties }}
         </div>
     </div>
     <div class="row form-group">
-        <div class="col-md-4">
-            <div class="text-dark-green">
-                {{ course_form.tas.label }}
-            </div>
+        <div class="col-md-3 control-label text-dark-green">
+            {{ course_form.tas.label_tag }}
         </div>
-        <div class="col-md-8 form-group">
+        <div class="col-md-9">
             {{ course_form.tas }}  
         </div>
     </div>
