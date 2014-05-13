@@ -44,7 +44,7 @@ class UserForm(forms.ModelForm):
         self.fields['username'].widget.attrs['class'] = 'form-control'
 
         if self.instance.pk is not None:
-            self.fields.pop("username")
+            self.fields["username"].widget.attrs['readonly'] = 'readonly'
 
     def clean_username(self):
         username = self.cleaned_data.get('username')
@@ -55,8 +55,8 @@ class UserForm(forms.ModelForm):
             ld.simple_bind_s()
             results = ld.search_s(settings.LDAP_BASE_DN, ldap.SCOPE_SUBTREE, "uid=" + username)
             record = results[0][1]
-            cn = record['cn']
-        except:
+
+        except IndexError:
             raise forms.ValidationError('This Odin username is invalid.')
 
         return username

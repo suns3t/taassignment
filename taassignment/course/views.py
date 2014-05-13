@@ -22,6 +22,8 @@ from django.conf import settings
 from taassignment.users.forms import SelectionForm
 import csv
 
+import ldap
+from django.conf import settings
 
 
 # Upload Courses
@@ -33,14 +35,13 @@ def upload_courses(request):
         if  form.is_valid():
             try:
                 with transaction.atomic():
-                    _request_csv_courses_upload(request.FILES['file'])
+                    _request_csv_courses_upload(request, request.FILES['file'])
             except (TypeError, ValueError) :
                 error='Wrong file type, number of columns do not mach!'
             except Exception as e:
                 error= '%s (%s)' % (e.message, type(e))
             else:
-                messages.success(request, "CSV file is uploaded. New courses are added!")
-                return HttpResponseRedirect(reverse("staff-home"))
+                return HttpResponseRedirect(reverse("staff-home-courses"))
     else:
         form = UploadFileForm()
     return render(request,'admin/upload_courses_import.html', {'form': form, "error": error})
@@ -55,14 +56,13 @@ def upload_tas(request):
         if  form.is_valid():
             try:
                 with transaction.atomic():
-                    _request_csv_tas_upload(request.FILES['file'])
+                    _request_csv_tas_upload(request, request.FILES['file'])
             except (TypeError, ValueError) :
                 error='Wrong file type, number of columns do not mach!'
             except Exception as e:
                 error= '%s (%s)' % (e.message, type(e))
             else:  
-                messages.success(request, "CSV file is uploaded. New TAs are added!")
-                return HttpResponseRedirect(reverse("staff-home"))
+                return HttpResponseRedirect(reverse("staff-home-users"))
     else:
         form = UploadFileForm()
     return render(request,'admin/upload_tas_import.html', {'form': form, "error": error})
@@ -111,9 +111,9 @@ def staff_add_course(request):
             course = course_form.save(commit=False)
             course.save()
             course_form.save_m2m()
-            messages.success(request, "New course added!")
+            messages.success(request, "New course is added!")
 
-            return HttpResponseRedirect(reverse('staff-home'))
+            return HttpResponseRedirect(reverse('staff-home-courses'))
     else:
         course_form = CourseForm()
 
@@ -133,9 +133,9 @@ def staff_edit_course(request, courseid):
             course = course_form.save(commit=False)
             course.save()
             course_form.save_m2m()
-            messages.success(request, "Edit course saved!")
+            messages.success(request, "Course information is saved!")
 
-            return HttpResponseRedirect(reverse('staff-home'))
+            return HttpResponseRedirect(reverse('staff-home-courses'))
     else:
         course_form = CourseForm(instance=course)
 
@@ -151,48 +151,116 @@ def staff_delete_course(request, courseid):
     if request.POST:
         course.delete()
 
-        messages.success(request, "Course deleted!")
-        return HttpResponseRedirect(reverse('staff-home'))
+        messages.success(request, "Course is deleted!")
+        return HttpResponseRedirect(reverse('staff-home-courses'))
 
     return render(request, 'admin/staff_delete_dialog.html', {
         'course' : course,
     })
 
-def _request_csv_tas_upload(f):
-    for r in csv.reader(f,delimiter=",",quoting=csv.QUOTE_NONNUMERIC):
+@user_passes_test(admin_member_check, login_url="/accounts/login_")
+def staff_delete_all_courses(request):
+    courses = Course.objects.all()
+
+    if request.POST:
+        courses.delete()
+
+        messages.success(request, "All courses are deleted!")
+        return HttpResponseRedirect(reverse('staff-home-courses'))
+
+    return render(request, 'admin/staff_delete_all_courses.html')
+
+def _request_csv_tas_upload(request, f):
+    count = 0
+    invalid_users = []
+    reader = csv.reader(f.read().splitlines())
+    next(reader, None) # skip the headers
+    for r in reader:
         if len(r) != 1: raise ValueError 
         odin = r[0].strip()
         try:
             user_exists = User.objects.get(username=odin)
         except User.DoesNotExist:
-            user = User()
-            user.username = odin
-            user.is_ta  = 1
-            user.is_active = 1
-            user.save()
+            first_name, last_name = _get_ldap_user_data(odin)
+            if first_name is not None:
+                user = User()
+                user.username = odin
+                user.first_name = first_name
+                user.last_name = last_name
+                user.is_ta  = 1
+                user.is_active = 1
+                user.save()
+                count = count + 1
+            else:
+                invalid_users.append(odin) 
 
-def _request_csv_courses_upload(f):
-    for r in csv.reader(f,delimiter=",",quoting=csv.QUOTE_NONNUMERIC):
+    if count:
+        messages.success(request, "CSV file is uploaded. %s new TAs are added!" % count)
+    else:
+        messages.warning(request, "TAs are already exist! No new TAs are created")
+
+    if len(invalid_users) > 0:
+        messages.warning(request, "There are some invalid Odin usernames: %s. Please correct it and submit the file again!" % ", ".join(map(str, invalid_users)))
+
+def _request_csv_courses_upload(request, f):
+    new_course = 0
+    invalid_users = []
+    
+    reader = csv.reader(f.read().splitlines())
+    next(reader, None) # skip the headers
+    for r in reader:
+        user = None
+        course = None
         course_no, course_name, odin = [item.strip() for item in r] # IndexError or PackingError
+        try:
+            user = User.objects.get(username=odin)
+        except User.DoesNotExist:
+            first_name, last_name = _get_ldap_user_data(odin)
+            if first_name is not None:
+                user = User()
+                user.username  = odin
+                user.first_name = first_name
+                user.last_name = last_name
+                user.is_faculty = 1
+                user.is_active = 1
+            else:
+                invalid_users.append(odin)
+
         try:
             course = Course.objects.get(course_no=course_no)
         except Course.DoesNotExist:
             course = Course()
             course.course_no = course_no
             course.course_name = course_name
+            new_course = new_course + 1
+        
+        if user is not None and course is not None:
+            user.save()
+            course.save()
+            course.faculties.add(user)
             course.save()
 
-        try:
-            user = User.objects.get(username=odin)
-        except User.DoesNotExist:
-            user = User()
-            user.username  = odin
-            user.is_faculty = 1
-            user.is_active = 1
-            user.save()
+    if len(invalid_users) > 0:
+        messages.warning(request, "There are some invalid Odin usernames: %s. Please correct it and submit the file again!" % ", ".join(map(str, invalid_users)))
+    
+    new_course = new_course - len(invalid_users)
+    if new_course:
+        messages.success(request, "CSV file is uploaded. %s new courses are added!" % new_course)
+    else:
+        messages.warning(request, "Courses uploaded are already exist! No new courses are created")
 
-        course.faculties.course_id  = course_no
-        course.faculties.add(user)
-        course.save()
+def _get_ldap_user_data(username):
+    try:
+        # Check if this username is an valid Odin username
+        ld = ldap.initialize(settings.LDAP_URL)
+        ld.simple_bind_s()
+        results = ld.search_s(settings.LDAP_BASE_DN, ldap.SCOPE_SUBTREE, "uid=" + username)
+        record = results[0][1]
+    except IndexError:
+        return None, None
 
-
+    cn = record['cn']
+    parts = cn[0].split(" ")
+    first_name = parts[0]
+    last_name = " ".join(parts[1:])
+    return first_name, last_name

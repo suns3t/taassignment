@@ -12,16 +12,15 @@
         <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}bootstrap-3.1.1-dist/css/sidebar.css">
         <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}bootstrap-3.1.1-dist/css/alert-info.css">
     </head>
-    <body>
-
+    <body style="min-height: 900px">
         <div class="navbar navbar-default" role="navigation">
-            <div class="container text-dark-green">
+            <div class="container">
                 <div class="navbar-header">
                     <a class="navbar-brand" href="/"><span style="padding-left: 20px">ECE TA Assignment Form</span></a>
                 </div>
             </div>
         </div>
-        <div id="wrap" style="min-height: 600px" >
+        <div id="wrap"  >
             <div class="container">
                 <div class="col-md-2">
                         <div class="span2" role="navigation">
@@ -37,9 +36,15 @@
                                 {% endif %}
                                 {% if user.is_staff %}
                                 <li>
-                                    <a href="/admin">
+                                    <a href="/admin/list_courses">
+                                        <i class="glyphicon glyphicon-list-alt"></i>
+                                         Admin - Course view
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/admin/list_users">
                                         <i class="glyphicon glyphicon-user"></i>
-                                         Admin View 
+                                         Admin - User view
                                     </a>
                                 </li>
                                 {% endif %}
@@ -84,8 +89,9 @@
             </div>
         </div>
         <div class="footer">
-            <div class="container text-dark-green">
+            <div class="container text-dark-green text-center">
                 <h6>Copyright 2014</h6>
+                <h6> Contact us at _________</h6>
             </div>
         </div>   
     </body>

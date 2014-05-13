@@ -11,17 +11,21 @@ from taassignment.perm import admin_member_check
 
 # Create your views here.
 @user_passes_test(admin_member_check, login_url="/accounts/login")
-def staff_view_list(request):
+def staff_courses_view_list(request):
     courses = Course.objects.all()
-    users = User.objects.all()
-    
-    user_form = UserForm()
 
-    return render(request, 'admin/staff_view_list.html', {
+    return render(request, 'admin/staff_course_view_list.html', {
         'courses' : courses,
-        'users' : users,
-        'user_form' : user_form,
     })
+
+@user_passes_test(admin_member_check, login_url="/accounts/login")
+def staff_users_view_list(request):
+    users = User.objects.all()
+
+    return render(request, 'admin/staff_user_view_list.html', {
+        'users' : users,
+    })
+
 
 
 @user_passes_test(admin_member_check, login_url="/accounts/login")
@@ -32,7 +36,8 @@ def staff_add_user(request):
         user_form = UserForm(request.POST)
         if user_form.is_valid():
             user_form.save()
-            return HttpResponseRedirect(reverse('staff-home'))
+            messages.success('New user is added!')
+            return HttpResponseRedirect(reverse('staff-home-users'))
     else:
         user_form = UserForm()
 
@@ -50,8 +55,8 @@ def staff_edit_user(request, userid):
         user_form = UserForm(request.POST, instance=user)
         if user_form.is_valid():
             user_form.save()
-            messages.success(request, "Saved!")
-            return HttpResponseRedirect(reverse('staff-home'))
+            messages.success(request, "User information is saved!")
+            return HttpResponseRedirect(reverse('staff-home-users'))
     else:
         user_form = UserForm(instance=user)
 
@@ -66,5 +71,10 @@ def staff_delete_user(request, userid):
     title = "Deleting User"
 
     if request.POST:
+        courses = Course.objects.filter(faculties=user)
+        for course in courses:
+            if course.faculties.count() == 1:
+                course.delete()
         user.delete()
-        return HttpResponseRedirect(reverse("staff-home"))
+        messages.success(request, "User is deleted!")
+        return HttpResponseRedirect(reverse("staff-home-users"))

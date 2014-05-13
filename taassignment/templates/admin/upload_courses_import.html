@@ -12,7 +12,9 @@
         })
     })
 </script>
-<h3> Upload Courses CSV File </h3>
+<h3 class="text-dark-green"> Upload Courses CSV File </h3>
+<p>Click <b>Browse</b> button and upload a csv file contains three column including course number, course name and odin account of faculty member teaching the class.</p>  
+<p>Template file is <a href="{{ STATIC_URL }}csv_templates/course.csv">here</a>
 <form enctype="multipart/form-data" name="UploadCoursesImport" method="post" id="id_form_upload">
     {% csrf_token %}
     {% if error %}
@@ -22,7 +24,7 @@
         Browse {{ form.file }}
     </span>
     <span class="btn btn-default">
-        <a href="/admin">Cancel</a>
+        <a href="/admin/list_courses">Cancel</a>
     </span>
 </form>
 {% endblock %}
