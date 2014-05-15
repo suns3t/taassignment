@@ -4,8 +4,6 @@
 
 {% block content %}
 <script type="text/javascript" src="{{ STATIC_URL }}bootstrap-3.1.1-dist/js/panel.js"></script>
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}bootstrap-3.1.1-dist/css/panel.css">
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}bootstrap-3.1.1-dist/css/sidebar.css">
 
 
 <h3 class="text-dark-green">User Management</h3>
@@ -16,6 +14,8 @@
     <div class="panel-heading">
         <h3 class="panel-title">Users</h3>
         <div class="pull-right">
+            <span class="clickable"><a href="/admin/delete_all_faculties">Delete All Faculties <i class="glyphicon glyphicon-remove"></i></a></span>
+            <span class="clickable"><a href="/admin/delete_all_tas">Delete All TAs <i class="glyphicon glyphicon-remove"></i></a></span>
             <span class="clickable"><a href="/admin/upload_tas">Import TA <i class="glyphicon glyphicon-cloud-upload"></i></a></span>
             <span class="clickable add_user"><a href="/admin/add_user">Add User</a><i class="glyphicon glyphicon-plus"></i>
             </span> 
@@ -31,13 +31,14 @@
                     <th class="col-md-2">Faculty</th>
                     <th class="col-md-2">TA</th>
                 </tr>
-            </thead>
-            {% if users.count %}
                 <tr id="search_box">
                     <td colspan="5">
                         <input type="text" class="form-control" id="course-table-filter" data-action="filter" data-filters="#user-table" placeholder="Filter Users" />
                     </td>
                 </tr>
+            </thead>
+            <tbody>
+            {% if users.count %}
                 {% for user in users %}
                     <tr>
                         <td class="col-md-2">
@@ -77,6 +78,7 @@
                 <td colspan="4">There is no user currently. Please add user.</td>
             </tr>
             {% endif %}
+        </tbody>
         </table>
     </div>
 </div>

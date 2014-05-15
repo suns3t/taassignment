@@ -23,22 +23,24 @@
                     <th class="col-md-3">Teacher</th>
                     <th class="col-md-3">Number of TA</th>
                 </tr>
+                <tr id="search_box" >
+                    <td colspan="12">
+                    <input type="text" class="form-control" id="course-table-filter" data-action="filter" data-filters="#course-table" placeholder="Filter Courses" /></td>
+                </tr>
             </thead>
-            <tr id="search_box" >
-                <td colspan="12">
-                <input type="text" class="form-control" id="course-table-filter" data-action="filter" data-filters="#course-table" placeholder="Filter Courses" /></td>
-            </tr>
-            {% for course in courses %}
-            <tr>
-                <td class="col-md-2">{{ course.course_no }}</td>
-                <td class="col-md-4">{{ course.course_name }}</td>
-                <td class="col-md-3">{% for faculty in course.faculties.all %}
-                        {{ faculty }}<br/>
-                    {% endfor %}
-                </td>
-                <td class="col-md-3">{{ course.tas.count }}</td>
-            </tr>
-            {% endfor %}
+            <tbody>
+                {% for course in courses %}
+                <tr>
+                    <td class="col-md-2">{{ course.course_no }}</td>
+                    <td class="col-md-4">{{ course.course_name }}</td>
+                    <td class="col-md-3">{% for faculty in course.faculties.all %}
+                            {{ faculty }}<br/>
+                        {% endfor %}
+                    </td>
+                    <td class="col-md-3">{{ course.tas.count }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
         </table>
     </div>
 </div>

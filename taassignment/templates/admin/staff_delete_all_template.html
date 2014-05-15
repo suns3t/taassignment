@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block page_title %}Delete All {{ title }}{% endblock %}
+
+{% block content %}
+<h3 class="text-dark-green"> Delete All {{ title }} </h3>
+<p>Click <b>Delete</b> button to delete all {{ title }} in the database.</p>  
+<p class="alert alert-danger"><b>Notice:</b> It is impossible to recover the database after you did this action. <b>Please think twice!<b></p>
+<div>
+    <button class="btn btn-primary" data-toggle="modal" data-target="#delete_modal_all" title="Delete" >
+        Delete
+    </button>
+    <a class="btn btn-default" href="{{ redirect_url }}">Cancel</a>
+    <div class="modal fade" id="delete_modal_all" role="dialog">
+        <div class="modal-dialog ">
+            <form class="well delete-form" method="post" action="{{ target_url }}">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">×</button>
+                  <h4 class="modal-title">Deleting {{ title }}</h4>
+                </div>
+                <div class="modal-body">
+                     {% csrf_token %}
+                     Are you sure that you want to delete <b>entire {{ title }}</b>?
+                </div>
+                <div class="modal-footer">
+                     <button class="btn btn-primary" type="submit" value="Yes" >Yes</button>
+                     <button class="btn btn-default"name="cancel"  data-dismiss="modal" value="No">No</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

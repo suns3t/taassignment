@@ -158,17 +158,24 @@ def staff_delete_course(request, courseid):
         'course' : course,
     })
 
-@user_passes_test(admin_member_check, login_url="/accounts/login_")
+@user_passes_test(admin_member_check, login_url="/accounts/login")
 def staff_delete_all_courses(request):
     courses = Course.objects.all()
+    title = "Courses"
+    redirect_url = '/admin/list_courses'
+    target_url = '/admin/delete_all_courses'
 
     if request.POST:
         courses.delete()
 
         messages.success(request, "All courses are deleted!")
-        return HttpResponseRedirect(reverse('staff-home-courses'))
+        return HttpResponseRedirect(redirect_url)
 
-    return render(request, 'admin/staff_delete_all_courses.html')
+    return render(request, 'admin/staff_delete_all_template.html', {
+        "title" : title,
+        "redirect_url" : redirect_url,
+        "target_url" : target_url,
+        })
 
 def _request_csv_tas_upload(request, f):
     count = 0
