@@ -36,7 +36,7 @@ def staff_add_user(request):
         user_form = UserForm(request.POST)
         if user_form.is_valid():
             user_form.save()
-            messages.success('New user is added!')
+            messages.success(request, 'New user is added!')
             return HttpResponseRedirect(reverse('staff-home-users'))
     else:
         user_form = UserForm()
