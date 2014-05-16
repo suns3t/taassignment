@@ -1,18 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" >
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{% block page_title %}{{ page_title }}{% endblock %}</title>
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         <script type="text/javascript" src="{{ STATIC_URL }}bootstrap-3.1.1-dist/js/bootstrap.js"></script>
         <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}bootstrap-3.1.1-dist/css/bootstrap.css">
         <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}bootstrap-3.1.1-dist/css/sidebar.css">
         <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}bootstrap-3.1.1-dist/css/alert-info.css">
         <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}bootstrap-3.1.1-dist/css/panel.css">
+        
+
     </head>
-    <body style="min-height: 900px">
+    <body style="min-height: 700px">
+
         <div class="navbar navbar-default" role="navigation">
             <div class="container">
                 <div class="navbar-header">
@@ -23,26 +26,28 @@
         <div id="wrap"  >
             <div class="container">
                 <div class="col-md-2">
-                        <div class="span2" role="navigation">
+                        <div class="span2" role="navigation" ng-controller="TabController as tab">
                             <ul class="nav nav-pills nav-stacked">
-                                <li class="active"><a href="/"><i class="glyphicon glyphicon-home"></i> Home</a></li>
+                                <li {% if section == 'home' %} class="active" {% endif %}>
+                                    <a href="/"><i class="glyphicon glyphicon-home"></i> Home</a>
+                                </li>
                                 {% if user.is_faculty %}
-                                <li>
-                                    <a href="/faculty">
+                                <li {% if section == 'faculty-home' %} class="active" {% endif %}>
+                                    <a href="/faculty" >
                                         <i class="glyphicon glyphicon-book"></i>
                                          Faculty courses 
                                     </a>
                                 </li>
                                 {% endif %}
                                 {% if user.is_staff %}
-                                <li>
-                                    <a href="/admin/list_courses">
+                                <li {% if section == 'course-home' %} class="active" {% endif %}>
+                                    <a href="/admin/list_courses" class="tab">
                                         <i class="glyphicon glyphicon-list-alt"></i>
                                          Admin - Course view
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="/admin/list_users">
+                                <li {% if section == 'user-home' %} class="active" {% endif %}>
+                                    <a href="/admin/list_users" class="tab">
                                         <i class="glyphicon glyphicon-user"></i>
                                          Admin - User view
                                     </a>
@@ -77,11 +82,14 @@
                         </div>
                     
                 </div>
-               
                 <div class="col-md-10" style="border-left: 1px dotted #439339; padding-left: 20px; padding-bottom: 60px">
                     {% if messages %}
                         {% for message in messages %}
-                            <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>{{ message }}</div>
+                            <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
+                                <button type="button" class="close pull-right" data-dismiss="alert" aria-hidden="true">
+                                    ×</button>
+                                {{ message }}
+                            </div>
                         {% endfor %}
                     {% endif %}
                     {% block content %}{% endblock %}
@@ -89,9 +97,9 @@
             </div>
         </div>
         <div class="footer">
-            <div class="container text-dark-green text-center">
-                <h6>Copyright 2014</h6>
-                <h6> Contact us at _________</h6>
+            <div class="container text-center text-muted">
+                <h6>It is {% now "SHORT_DATETIME_FORMAT" %}</h6>
+                <h6>Designed and constructed by <a href="https://www.pdx.edu/arc">ARC</a></h6>
             </div>
         </div>   
     </body>

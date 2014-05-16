@@ -13,17 +13,21 @@ from taassignment.perm import admin_member_check
 @user_passes_test(admin_member_check, login_url="/accounts/login")
 def staff_courses_view_list(request):
     courses = Course.objects.all()
+    section = 'course-home'
 
     return render(request, 'admin/staff_course_view_list.html', {
         'courses' : courses,
+        'section' : section,
     })
 
 @user_passes_test(admin_member_check, login_url="/accounts/login")
 def staff_users_view_list(request):
     users = User.objects.all()
+    section = 'user-home'
 
     return render(request, 'admin/staff_user_view_list.html', {
         'users' : users,
+        'section' : section,
     })
 
 
@@ -31,6 +35,7 @@ def staff_users_view_list(request):
 @user_passes_test(admin_member_check, login_url="/accounts/login")
 def staff_add_user(request):
     title = "Add New User"
+    section = 'user-home'
 
     if request.POST:
         user_form = UserForm(request.POST)
@@ -43,6 +48,7 @@ def staff_add_user(request):
 
     return render(request, 'admin/staff_add_user.html', {
         'user_form' : user_form,
+        'section' : section,
         'title' : title,
     })
 
@@ -50,6 +56,7 @@ def staff_add_user(request):
 def staff_edit_user(request, userid):
     user = get_object_or_404(User, pk=userid)
     title = "Edit Existing User"
+    section = 'user-home'
 
     if request.POST:
         user_form = UserForm(request.POST, instance=user)
@@ -62,13 +69,15 @@ def staff_edit_user(request, userid):
 
     return render(request, 'admin/staff_add_user.html', {
         'user_form' : user_form,
-        'title' : title
+        'title' : title,
+        'section' : section,
     })
 
 @user_passes_test(admin_member_check, login_url="/accounts/login")
 def staff_delete_user(request, userid):
     user = get_object_or_404(User, pk=userid)
     title = "Deleting User"
+    section = 'user-home'
 
     if request.POST:
         courses = Course.objects.filter(faculties=user)
@@ -84,6 +93,7 @@ def staff_delete_all_faculties(request):
     title = "Faculties"
     redirect_url = '/admin/list_users'
     target_url = '/admin/delete_all_faculties'
+    section = 'user-home'
 
     if request.POST:
         no_of_faculties = 0
@@ -107,6 +117,7 @@ def staff_delete_all_faculties(request):
         "title" : title,
         "redirect_url" : redirect_url,
         "target_url" : target_url,
+        'section' : section,
         })
 
 @user_passes_test(admin_member_check, login_url="/accounts/login")
@@ -114,6 +125,7 @@ def staff_delete_all_tas(request):
     title = "TAs"
     redirect_url = '/admin/list_users'
     target_url = '/admin/delete_all_tas'
+    section = 'user-home'
 
     if request.POST:
         no_of_tas = 0
@@ -134,4 +146,5 @@ def staff_delete_all_tas(request):
         "title" : title,
         "redirect_url" : redirect_url,
         "target_url" : target_url,
+        'section' : section,
         })

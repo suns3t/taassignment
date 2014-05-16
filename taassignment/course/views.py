@@ -30,6 +30,8 @@ from django.conf import settings
 @user_passes_test(admin_member_check, login_url="/accounts/login")
 def upload_courses(request):
     error = None
+    section = "course-home"
+
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
         if  form.is_valid():
@@ -44,13 +46,19 @@ def upload_courses(request):
                 return HttpResponseRedirect(reverse("staff-home-courses"))
     else:
         form = UploadFileForm()
-    return render(request,'admin/upload_courses_import.html', {'form': form, "error": error})
+    return render(request,'admin/upload_courses_import.html', {
+        'form': form, 
+        'error': error,
+        'section' : section,
+    })
 
 
 # Upload Tas
 @user_passes_test(admin_member_check, login_url="/accounts/login")
 def upload_tas(request):
     error = None
+    section = 'user-home'
+
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
         if  form.is_valid():
@@ -65,17 +73,23 @@ def upload_tas(request):
                 return HttpResponseRedirect(reverse("staff-home-users"))
     else:
         form = UploadFileForm()
-    return render(request,'admin/upload_tas_import.html', {'form': form, "error": error})
+    return render(request,'admin/upload_tas_import.html', {
+        'form': form, 
+        'error': error,
+        'section' : section
+    })
 
 
 # Public view of the page, also act as homepage
 def public_view_list(request):
     courses = Course.objects.all()
     no_of_course = Course.objects.count()
+    section = "home"
 
     return render(request, "course/public_view_list.html", {
         "courses" : courses,
         "has_courses" : no_of_course ,
+        "section" : section,
     })
 
 
@@ -84,6 +98,7 @@ def faculty_view_list(request):
     courses = Course.objects.filter(faculties=request.user)
     no_of_course = courses.count()
     tas = User.objects.filter(is_ta=True)
+    section = "faculty-home"
 
     if request.POST:
         form = SelectionForm(request.POST, user=request.user)
@@ -99,11 +114,13 @@ def faculty_view_list(request):
     return render(request, "course/faculty_view_list.html", {
         "courses" : courses,
         "has_courses" : no_of_course,
-        })
+        "section" : section,
+    })
 
 @user_passes_test(admin_member_check, login_url="/accounts/login")
 def staff_add_course(request):
     title = "Add New Course"
+    section = "course-home"
 
     if request.POST:
         course_form = CourseForm(request.POST)
@@ -120,12 +137,14 @@ def staff_add_course(request):
     return render(request, 'admin/staff_add_course.html', {
         'course_form' : course_form,
         'title' : title,
+        'section' : section,
     })
 
 @user_passes_test(admin_member_check, login_url="/accounts/login")
 def staff_edit_course(request, courseid):
     course = get_object_or_404(Course, pk=courseid)
     title = "Edit Existing Course"
+    section = "course-home"
 
     if request.POST:
         course_form = CourseForm(request.POST, instance=course)
@@ -142,12 +161,14 @@ def staff_edit_course(request, courseid):
     return render(request, 'admin/staff_add_course.html', {
         'course_form' : course_form,
         'title' : title,
+        'section' : section,
     })
 
 @user_passes_test(admin_member_check, login_url="/accounts/login")
 def staff_delete_course(request, courseid):
     course = get_object_or_404(Course, pk=courseid)
-    
+    section = "course-home"
+
     if request.POST:
         course.delete()
 
@@ -156,6 +177,7 @@ def staff_delete_course(request, courseid):
 
     return render(request, 'admin/staff_delete_dialog.html', {
         'course' : course,
+        'section' : section,
     })
 
 @user_passes_test(admin_member_check, login_url="/accounts/login")
@@ -164,6 +186,7 @@ def staff_delete_all_courses(request):
     title = "Courses"
     redirect_url = '/admin/list_courses'
     target_url = '/admin/delete_all_courses'
+    section = "course-home"
 
     if request.POST:
         courses.delete()
@@ -175,7 +198,8 @@ def staff_delete_all_courses(request):
         "title" : title,
         "redirect_url" : redirect_url,
         "target_url" : target_url,
-        })
+        "section" : section,
+    })
 
 def _request_csv_tas_upload(request, f):
     count = 0
