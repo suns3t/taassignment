@@ -3,6 +3,7 @@
 {% block page_title %}TA Assignment Form - Admin Homepage{% endblock %}
 
 {% block content %}
+<script type="text/javascript" src="{{ STATIC_URL }}bootstrap-3.1.1-dist/js/panel.js"></script>
 
 <form role="form" method="post" style="width: 70%" class="form-horizontal">
     {% csrf_token %}
@@ -62,4 +63,6 @@
     </div>
     
 </form>
+
+
 {% endblock %}

@@ -57,6 +57,7 @@ def staff_edit_user(request, userid):
     user = get_object_or_404(User, pk=userid)
     title = "Edit Existing User"
     section = 'user-home'
+    
 
     if request.POST:
         user_form = UserForm(request.POST, instance=user)
@@ -66,6 +67,9 @@ def staff_edit_user(request, userid):
             return HttpResponseRedirect(reverse('staff-home-users'))
     else:
         user_form = UserForm(instance=user)
+
+    if user == request.user:
+        user_form.fields.pop("is_staff")
 
     return render(request, 'admin/staff_add_user.html', {
         'user_form' : user_form,
