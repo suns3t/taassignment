@@ -20,13 +20,13 @@
     })
 </script>
 
-<form role="form" method="post" style="width: 70%" class="form-horizontal" >
+<form role="form" method="post" class="form-horizontal col-md-6" >
     {% csrf_token %}
     {% if course_form.errors %}
     <div class="alert alert-danger">{{ course_form.errors }}</div>
     {% endif %}
     <h3 class="text-dark-green" >{{ title }}</h3>
-    <p style="border-bottom: 1px solid #76ad2d; padding-bottom:10px">Fill out the information of a classes in the following fields</p>
+    <p>Fill out the information of a classes in the following fields</p>
     <div class="row form-group">
         <div class="control-label col-md-3 text-dark-green">
             {{ course_form.course_no.label_tag }}

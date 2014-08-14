@@ -1,14 +1,11 @@
 {% extends "base.html" %}
 
-{% block page_title %}Main Page - TA Assignment Form{% endblock %}
+{% block page_title %}ECE TA Assignments{% endblock %}
 
 {% block content %}
-<script type="text/javascript" src="{{ STATIC_URL }}bootstrap-3.1.1-dist/js/panel.js"></script>
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}bootstrap-3.1.1-dist/css/panel.css">
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}bootstrap-3.1.1-dist/css/sidebar.css">
     
-<h3 class="text-dark-green">Homepage of TA assignment form</h3>
-<p>The website is to simplify the assignment of teaching assistants to classes at Electrical and Computer Engineering department at Portland State University.</p>
+<h3 class="text-dark-green">ECE TA Assignments</h3>
+<p>This application allows faculty members to assign TAs to their classes.</p>
 {% if has_courses %}
 <div class="panel panel-primary">
     <div class="panel-heading">
@@ -21,7 +18,7 @@
                     <th class="col-md-2">Course no.</th>
                     <th class="col-md-4">Course name</th>
                     <th class="col-md-3">Teacher</th>
-                    <th class="col-md-3">Number of TA</th>
+                    <th class="col-md-3">Number of TAs</th>
                 </tr>
                 <tr id="search_box" >
                     <td colspan="12">
@@ -46,7 +43,7 @@
 </div>
 {% else %}
 <div class="alert alert-info">
-    There is no class available at the moment. Contact admin to add courses.
+    There are no classes currently listed.
 </div>
 {% endif %}
     

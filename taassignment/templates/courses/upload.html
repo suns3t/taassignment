@@ -1,24 +1,22 @@
 {% extends "base.html" %}
 
-{% block page_title %}Teacher's - TAs Upload Courses CSV File{% endblock %}
+{% block page_title %}Upload Courses{% endblock %}
 
 {% block content %}
 <script type="text/javascript">
     $(document).ready(function() {
-        $('#id_form_upload').submit(function() {return true;})
-
         $('#id_file').on('change', function(){
             $('#id_form_upload').trigger('submit')
         })
     })
 </script>
 <h3 class="text-dark-green"> Upload Courses CSV File </h3>
-<p>Click <b>Browse</b> button and upload a csv file contains three column including course number, course name and odin account of faculty member teaching the class.</p>  
-<p>Template file is <a href="{{ STATIC_URL }}csv_templates/course.csv">here</a>
+<p>Click the <strong>Browse</strong> button and upload a csv file containing three columns: course number, course name and odin account of the faculty member teaching the class.</p>
+<p>Please use the <a href="{{ STATIC_URL }}csv_templates/course.csv">Template file here</a>.</p>
 <form enctype="multipart/form-data" name="UploadCoursesImport" method="post" id="id_form_upload">
     {% csrf_token %}
     {% if error %}
-    <div class="alert alert-danger">{{ error }}</div>
+        <div class="alert alert-danger">{{ error }}</div>
     {% endif %}
     <span class="btn btn-file btn-primary">
         Browse {{ form.file }}

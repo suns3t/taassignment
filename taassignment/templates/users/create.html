@@ -1,11 +1,10 @@
 {% extends 'base.html' %}
 
-{% block page_title %}TA Assignment Form - Admin Homepage{% endblock %}
+{% block page_title %}Create or Edit User{% endblock %}
 
 {% block content %}
-<script type="text/javascript" src="{{ STATIC_URL }}bootstrap-3.1.1-dist/js/panel.js"></script>
 
-<form role="form" method="post" style="width: 70%" class="form-horizontal">
+<form role="form" method="post" class="form-horizontal col-md-6">
     {% csrf_token %}
     {% if user_form.errors %}
         <div class="alert alert-danger">
@@ -15,8 +14,8 @@
     <h3 class="text-dark-green" >
         {{ title }}
     </h3>
-    <p style="border-bottom: 1px solid #76ad2d; padding-bottom:10px">
-        Fill out the information of users in the following boxes
+    <p style="">
+        Fill in the user information below:
     </p>
     <div class="row form-group">
         <div class="col-md-2">
@@ -41,7 +40,7 @@
     </div>
     <div class="row form-group">
         <div class="col-md-3 control-label text-dark-green">
-            {{ user_form.is_staff }} 
+            {{ user_form.is_staff }}
             {{ user_form.is_staff.label }}
         </div>
         <div class="col-md-3 control-label text-dark-green">
@@ -61,7 +60,6 @@
             <a href="{% url 'users-list' %}" class="btn btn-default btn-block">Cancel</a>
         </div>
     </div>
-    
 </form>
 
 

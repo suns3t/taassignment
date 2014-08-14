@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block page_title %}Main Page - TA Assignment Form{% endblock %}
+{% block page_title %}TA Assignment{% endblock %}
 
 {% block content %}
 <script type="text/javascript" src="{{ STATIC_URL }}bootstrap-3.1.1-dist/js/panel.js"></script>
@@ -18,10 +18,9 @@
    })    
 </script>
 
-<h3 class="text-dark-green">Faculty Homepage</h3>
-<p>In this page, you can add, edit or delete TA for each of your class.</p>
-<p>When you finish editing TA for all the classes, simply click the <b>Save</b> button to save all the changes.</p>
-   
+<h3 class="text-dark-green">Courses</h3>
+<p>Your current classes are listed below. You may add/remove TAs from your class. Be sure to hit the save button when you are finished.</p>
+
 {% if has_courses %}
 <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
@@ -72,7 +71,7 @@
 </form>
 {% else %}
 <div class="alert alert-info">
-    There is no class available at the moment. Contact admin to add courses.
+    You have no classes currently!
 </div>
 
     {% endif %}

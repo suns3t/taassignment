@@ -87,7 +87,7 @@ def delete(request, userid):
 
 @user_passes_test(admin_member_check, login_url="/accounts/login")
 def clear_faculty(request):
-    title = "Faculties"
+    title = "Faculty"
     redirect_url = reverse("users-list")
     target_url = reverse("users-clear-faculty")
     section = 'user-home'
@@ -109,6 +109,13 @@ def clear_faculty(request):
 
         return HttpResponseRedirect(redirect_url)
 
+    return render(request, 'clear.html', {
+        "title" : title,
+        "redirect_url" : redirect_url,
+        "target_url" : target_url,
+        "section" : section,
+    })
+
 @user_passes_test(admin_member_check, login_url="/accounts/login")
 def clear_tas(request):
     title = "TAs"
@@ -129,6 +136,13 @@ def clear_tas(request):
             messages.success(request, "No TA deleted!")
 
         return HttpResponseRedirect(redirect_url)
+
+    return render(request, 'clear.html', {
+        "title" : title,
+        "redirect_url" : redirect_url,
+        "target_url" : target_url,
+        "section" : section,
+    })
 
 # Upload Tas
 @user_passes_test(admin_member_check, login_url="/accounts/login")
@@ -184,8 +198,7 @@ def _request_csv_tas_upload(request, f):
             else:
                 invalid_users.append(odin) 
 
-    if count:
-        messages.success(request, "CSV file uploaded. %s new TAs added!" % count)
+    messages.success(request, "CSV file uploaded. %s new TAs added!" % count)
 
     if len(invalid_users) > 0:
         messages.warning(request, "There are some invalid Odin usernames: %s. They were not created." % ", ".join(map(str, invalid_users)))

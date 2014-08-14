@@ -123,7 +123,7 @@ def clear(request):
         messages.success(request, "All courses deleted!")
         return HttpResponseRedirect(redirect_url)
 
-    return render(request, 'courses/clear.html', {
+    return render(request, 'clear.html', {
         "title" : title,
         "redirect_url" : redirect_url,
         "target_url" : target_url,

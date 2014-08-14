@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block page_title %}TA Assignment Form - Admin Homepage{% endblock %}
+{% block page_title %}Users List{% endblock %}
 
 {% block content %}
 <script type="text/javascript" src="{{ STATIC_URL }}bootstrap-3.1.1-dist/js/panel.js"></script>
@@ -14,11 +14,11 @@
     <div class="panel-heading">
         <h3 class="panel-title">Users</h3>
         <div class="pull-right">
-            <span class="clickable"><a href="{% url 'users-clear-faculty' %}">Delete All Faculties <i class="glyphicon glyphicon-remove"></i></a></span>
+            <span class="clickable"><a href="{% url 'users-clear-faculty' %}">Delete All Faculty <i class="glyphicon glyphicon-remove"></i></a></span>
             <span class="clickable"><a href="{% url 'users-clear-tas' %}">Delete All TAs <i class="glyphicon glyphicon-remove"></i></a></span>
             <span class="clickable"><a href="{% url 'users-upload' %}">Import TA <i class="glyphicon glyphicon-cloud-upload"></i></a></span>
             <span class="clickable add_user"><a href="{% url 'users-create' %}">Add User</a><i class="glyphicon glyphicon-plus"></i>
-            </span> 
+            </span>
         </div>
     </div>
     <div class="panel-body">
@@ -75,7 +75,7 @@
                 {% endfor %}
             {% else %}
             <tr>
-                <td colspan="4">There is no user currently. Please add user.</td>
+                <td colspan="4">There are no users!</td>
             </tr>
             {% endif %}
         </tbody>

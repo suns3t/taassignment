@@ -44,13 +44,13 @@
                                 <li {% if section == 'course-home' %} class="active" {% endif %}>
                                     <a href="{% url 'courses-list' %}" class="tab">
                                         <i class="glyphicon glyphicon-list-alt"></i>
-                                         Admin - Course view
+                                         Admin - Courses
                                     </a>
                                 </li>
                                 <li {% if section == 'user-home' %} class="active" {% endif %}>
                                     <a href="{% url 'users-list' %}" class="tab">
                                         <i class="glyphicon glyphicon-user"></i>
-                                         Admin - User view
+                                         Admin - Users
                                     </a>
                                 </li>
                                 {% endif %}
@@ -79,9 +79,8 @@
                                         <a href="{% url 'account-login' %}"><i class="glyphicon glyphicon-log-in"></i> Login</a>
                                     </li>
                                 {% endif %}
-                            </ul> 
+                            </ul>
                         </div>
-                    
                 </div>
                 <div class="col-md-10" style="border-left: 1px dotted #439339; padding-left: 20px; padding-bottom: 60px">
                     {% if messages %}
@@ -99,7 +98,6 @@
         </div>
         <div class="footer">
             <div class="container text-center text-muted">
-                <h6>It is {% now "SHORT_DATETIME_FORMAT" %}</h6>
                 <h6>Designed and constructed by <a href="https://www.pdx.edu/arc">ARC</a></h6>
             </div>
         </div>   
