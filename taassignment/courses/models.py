@@ -1,5 +1,5 @@
 from django.db import models
-from taassignment.users.models import User 
+from taassignment.users.models import User
 # Create your models here.
 
 class Course(models.Model):
@@ -10,6 +10,7 @@ class Course(models.Model):
     tas = models.ManyToManyField(User, related_name='tas', blank=True)
 
     class Meta:
+        db_table = "course"
         ordering = ('course_name',)
         permissions = (
             ("change_ta", "Can change TA in this course"),

@@ -35,11 +35,12 @@
                                 <li {% if section == 'faculty-home' %} class="active" {% endif %}>
                                     <a href="/faculty" >
                                         <i class="glyphicon glyphicon-book"></i>
-                                         Faculty courses 
+                                        My Courses
                                     </a>
                                 </li>
                                 {% endif %}
                                 {% if user.is_staff %}
+                                <li class="nav-divider"></li>
                                 <li {% if section == 'course-home' %} class="active" {% endif %}>
                                     <a href="/admin/list_courses" class="tab">
                                         <i class="glyphicon glyphicon-list-alt"></i>

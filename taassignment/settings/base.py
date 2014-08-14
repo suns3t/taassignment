@@ -47,7 +47,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'taassignment.users',
-    'taassignment.course',
+    'taassignment.courses',
 )
 
 MIDDLEWARE_CLASSES = (

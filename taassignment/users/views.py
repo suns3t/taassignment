@@ -1,27 +1,23 @@
+import csv
+
 from django.shortcuts import render, get_object_or_404
 from djangocas.decorators import user_passes_test
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib import messages
+from django.db import transaction
+from django.conf import settings
 
-from taassignment.course.models import Course
-from taassignment.users.models import User
-from .forms import UserForm
+from taassignment.utils import get_ldap_user_data
+from taassignment.courses.models import Course
+from taassignment.courses.forms import UploadFileForm
 from taassignment.perm import admin_member_check
 
-# Create your views here.
-@user_passes_test(admin_member_check, login_url="/accounts/login")
-def staff_courses_view_list(request):
-    courses = Course.objects.all()
-    section = 'course-home'
-
-    return render(request, 'admin/staff_course_view_list.html', {
-        'courses' : courses,
-        'section' : section,
-    })
+from .models import User
+from .forms import UserForm
 
 @user_passes_test(admin_member_check, login_url="/accounts/login")
-def staff_users_view_list(request):
+def list_(request):
     users = User.objects.all()
     section = 'user-home'
 
@@ -30,10 +26,8 @@ def staff_users_view_list(request):
         'section' : section,
     })
 
-
-
 @user_passes_test(admin_member_check, login_url="/accounts/login")
-def staff_add_user(request):
+def create(request):
     title = "Add New User"
     section = 'user-home'
 
@@ -53,11 +47,10 @@ def staff_add_user(request):
     })
 
 @user_passes_test(admin_member_check, login_url="/accounts/login")
-def staff_edit_user(request, userid):
+def edit(request, userid):
     user = get_object_or_404(User, pk=userid)
     title = "Edit Existing User"
     section = 'user-home'
-    
 
     if request.POST:
         user_form = UserForm(request.POST, instance=user)
@@ -78,7 +71,7 @@ def staff_edit_user(request, userid):
     })
 
 @user_passes_test(admin_member_check, login_url="/accounts/login")
-def staff_delete_user(request, userid):
+def delete(request, userid):
     user = get_object_or_404(User, pk=userid)
     title = "Deleting User"
     section = 'user-home'
@@ -93,7 +86,7 @@ def staff_delete_user(request, userid):
         return HttpResponseRedirect(reverse("staff-home-users"))
 
 @user_passes_test(admin_member_check, login_url="/accounts/login")
-def staff_delete_all_faculties(request):
+def clear_faculty(request):
     title = "Faculties"
     redirect_url = '/admin/list_users'
     target_url = '/admin/delete_all_faculties'
@@ -101,15 +94,14 @@ def staff_delete_all_faculties(request):
 
     if request.POST:
         no_of_faculties = 0
-        faculties = User.objects.filter(is_faculty=True)
+        faculties = User.objects.filter(is_faculty=True, is_staff=False)
         for faculty in faculties:
-            if not faculty.is_staff:
-                courses = Course.objects.filter(faculties=faculty)
-                for course in courses:
-                    if course.faculties.count() == 1:
-                        course.delete()
-                faculty.delete()
-                no_of_faculties = no_of_faculties + 1
+            courses = Course.objects.filter(faculties=faculty)
+            for course in courses:
+                if course.faculties.count() == 1:
+                    course.delete()
+            faculty.delete()
+            no_of_faculties = no_of_faculties + 1
         if no_of_faculties > 0:
             messages.success(request, "%s faculties members are deleted!" % no_of_faculties )
         else:
@@ -125,7 +117,7 @@ def staff_delete_all_faculties(request):
         })
 
 @user_passes_test(admin_member_check, login_url="/accounts/login")
-def staff_delete_all_tas(request):
+def clear_tas(request):
     title = "TAs"
     redirect_url = '/admin/list_users'
     target_url = '/admin/delete_all_tas'
@@ -133,11 +125,10 @@ def staff_delete_all_tas(request):
 
     if request.POST:
         no_of_tas = 0
-        tas = User.objects.filter(is_ta=True)
+        tas = User.objects.filter(is_ta=True, is_staff=False)
         for ta in tas:
-            if not ta.is_staff:
-                ta.delete()
-                no_of_tas = no_of_tas + 1
+            ta.delete()
+            no_of_tas = no_of_tas + 1
 
         if no_of_tas > 0:
             messages.success(request, "%s TAs are deleted!" % no_of_tas )
@@ -152,3 +143,63 @@ def staff_delete_all_tas(request):
         "target_url" : target_url,
         'section' : section,
         })
+
+# Upload Tas
+@user_passes_test(admin_member_check, login_url="/accounts/login")
+def upload(request):
+    error = None
+    section = 'user-home'
+
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES)
+        if  form.is_valid():
+            try:
+                with transaction.atomic():
+                    _request_csv_tas_upload(request, request.FILES['file'])
+            except (TypeError, ValueError) :
+                error='Wrong file type, number of columns do not mach!'
+            except Exception as e:
+                error= '%s (%s)' % (e.message, type(e))
+            else:  
+                return HttpResponseRedirect(reverse("staff-home-users"))
+    else:
+        form = UploadFileForm()
+
+    return render(request,'admin/upload_tas_import.html', {
+        'form': form, 
+        'error': error,
+        'section' : section
+    })
+
+def _request_csv_tas_upload(request, f):
+    count = 0
+    invalid_users = []
+    reader = csv.reader(f.read().splitlines())
+    next(reader, None) # skip the headers
+    for r in reader:
+        if len(r) != 1: raise ValueError 
+        odin = r[0].strip()
+        try:
+            user_exists = User.objects.get(username=odin)
+        except User.DoesNotExist:
+            first_name, last_name = get_ldap_user_data(odin)
+            if first_name is not None:
+                user = User()
+                user.username = odin
+                user.first_name = first_name
+                user.last_name = last_name
+                user.is_ta  = 1
+                user.is_active = 1
+                user.save()
+                count = count + 1
+            else:
+                invalid_users.append(odin) 
+
+    if count:
+        messages.success(request, "CSV file is uploaded. %s new TAs are added!" % count)
+    else:
+        messages.warning(request, "TAs are already exist! No new TAs are created")
+
+    if len(invalid_users) > 0:
+        messages.warning(request, "There are some invalid Odin usernames: %s. Please correct it and submit the file again!" % ", ".join(map(str, invalid_users)))
+
