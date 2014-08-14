@@ -13,9 +13,9 @@
     <div class="panel-heading">
         <h3 class="panel-title">Courses</h3>
         <div class="pull-right">
-            <span class="clickable"><a href="/admin/delete_all_courses">Clear all Courses <i class="glyphicon glyphicon-remove"></i></a></span>
-            <span class="clickable"><a href="/admin/upload_courses">Import Course <i class="glyphicon glyphicon-cloud-upload"></i></a></span>
-            <span class="clickable"><a href="/admin/add_course">Add Course</a><i class="glyphicon glyphicon-plus"></i>
+            <span class="clickable"><a href="{% url 'courses-clear' %}">Clear all Courses <i class="glyphicon glyphicon-remove"></i></a></span>
+            <span class="clickable"><a href="{% url 'courses-upload' %}">Import Course <i class="glyphicon glyphicon-cloud-upload"></i></a></span>
+            <span class="clickable"><a href="{% url 'courses-create' %}">Add Course</a><i class="glyphicon glyphicon-plus"></i>
             </span> 
         </div>
     </div>
@@ -47,7 +47,7 @@
                                 {% include 'courses/modal.html' %}
                             </div>
                         </div>
-                        <a href="/admin/edit_course/{{ course.id }}">{{ course.course_no }}</a></td>
+                        <a href="{% url 'courses-edit' course.id %}">{{ course.course_no }}</a></td>
                     <td class="col-md-4">{{ course.course_name }}</td>
                     <td class="col-md-3">
                         {% for faculty in course.faculties.all %}

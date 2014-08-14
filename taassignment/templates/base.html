@@ -33,7 +33,7 @@
                                 </li>
                                 {% if user.is_faculty %}
                                 <li {% if section == 'faculty-home' %} class="active" {% endif %}>
-                                    <a href="/faculty" >
+                                    <a href="{% url 'courses-change-tas' %}">
                                         <i class="glyphicon glyphicon-book"></i>
                                         My Courses
                                     </a>
@@ -42,13 +42,13 @@
                                 {% if user.is_staff %}
                                 <li class="nav-divider"></li>
                                 <li {% if section == 'course-home' %} class="active" {% endif %}>
-                                    <a href="/admin/list_courses" class="tab">
+                                    <a href="{% url 'courses-list' %}" class="tab">
                                         <i class="glyphicon glyphicon-list-alt"></i>
                                          Admin - Course view
                                     </a>
                                 </li>
                                 <li {% if section == 'user-home' %} class="active" {% endif %}>
-                                    <a href="/admin/list_users" class="tab">
+                                    <a href="{% url 'users-list' %}" class="tab">
                                         <i class="glyphicon glyphicon-user"></i>
                                          Admin - User view
                                     </a>

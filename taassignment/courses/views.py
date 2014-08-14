@@ -42,7 +42,7 @@ def upload(request):
             except Exception as e:
                 error= '%s (%s)' % (e.message, type(e))
             else:
-                return HttpResponseRedirect(reverse("staff-home-courses"))
+                return HttpResponseRedirect(reverse("courses-list"))
     else:
         form = UploadFileForm()
     return render(request,'courses/upload.html', {
@@ -64,7 +64,7 @@ def create(request):
             course_form.save_m2m()
             messages.success(request, "New course is added!")
 
-            return HttpResponseRedirect(reverse('staff-home-courses'))
+            return HttpResponseRedirect(reverse('courses-list'))
     else:
         course_form = CourseForm()
 
@@ -88,7 +88,7 @@ def edit(request, courseid):
             course_form.save_m2m()
             messages.success(request, "Course information is saved!")
 
-            return HttpResponseRedirect(reverse('staff-home-courses'))
+            return HttpResponseRedirect(reverse('courses-list'))
     else:
         course_form = CourseForm(instance=course)
 
@@ -107,14 +107,14 @@ def delete(request, courseid):
         course.delete()
 
         messages.success(request, "Course is deleted!")
-        return HttpResponseRedirect(reverse('staff-home-courses'))
+        return HttpResponseRedirect(reverse('courses-list'))
 
 @user_passes_test(admin_member_check, login_url="/accounts/login")
 def clear(request):
     courses = Course.objects.all()
     title = "Courses"
-    redirect_url = '/admin/list_courses'
-    target_url = '/admin/delete_all_courses'
+    redirect_url = reverse("courses-list")
+    target_url = reverse("courses-clear")
     section = "course-home"
 
     if request.POST:

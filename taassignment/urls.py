@@ -2,7 +2,6 @@ from django.conf.urls import patterns, include, url
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.conf import settings
-from taassignment.users import views as user
 from taassignment.users import views as users
 from taassignment.courses import views as courses
 from . import views
@@ -12,24 +11,22 @@ admin.autodiscover()
 urlpatterns = patterns('',
 	url(r'^$', views.home , name='home'),
 
-    url(r'^admin/list_users$', users.list_, name='staff-home-users'),
-    url(r'^admin/add_user$', users.create, name='staff-add-user'),
-    url(r'^admin/edit_user/(?P<userid>\d+)$' , users.edit, name='staff-edit-user'),
-    url(r'^admin/delete_user/(?P<userid>\d+)$', users.delete, name='staff-delete-user'),
-    url(r'^admin/delete_all_tas$', users.clear_tas, name='staff-delete-all-tas'),
-    url(r'^admin/delete_all_faculties$', users.clear_faculty, name='staff-delete-all-faculties'),
-    url(r'^admin/upload_tas/',users.upload, name='upload-tas' ),
+    url(r'^users/list$', users.list_, name='users-list'),
+    url(r'^users/create$', users.create, name='users-create'),
+    url(r'^users/edit/(?P<userid>\d+)$' , users.edit, name='users-edit'),
+    url(r'^users/delete/(?P<userid>\d+)$', users.delete, name='users-delete'),
+    url(r'^users/clear_tas$', users.clear_tas, name='users-clear-tas'),
+    url(r'^users/clear_faculty$', users.clear_faculty, name='users-clear-faculty'),
+    url(r'^users/upload/', users.upload, name='users-upload' ),
 
-    url(r'^admin/list_courses$', courses.list_, name='staff-home-courses'),
-    url(r'^admin/upload_courses/',courses.upload, name='upload-courses' ),
-    url(r'^admin/add_course$', courses.create, name='staff-add-course'),
-    url(r'^admin/edit_course/(?P<courseid>\d+)$' , courses.edit, name='staff-edit-course'),
-    url(r'^admin/delete_course/(?P<courseid>\d+)$', courses.delete, name='staff-delete-course'),
-    url(r'^admin/delete_all_courses$', courses.clear, name='staff-delete-all-courses'),
-    url(r'^faculty/$', courses.change_tas, name='faculty-home'),
-)
+    url(r'^courses/list$', courses.list_, name='courses-list'),
+    url(r'^courses/upload/',courses.upload, name='courses-upload' ),
+    url(r'^courses/create$', courses.create, name='courses-create'),
+    url(r'^courses/edit/(?P<courseid>\d+)$' , courses.edit, name='courses-edit'),
+    url(r'^courses/delete/(?P<courseid>\d+)$', courses.delete, name='courses-delete'),
+    url(r'^courses/clear$', courses.clear, name='courses-clear'),
+    url(r'^courses/change_tas/$', courses.change_tas, name='courses-change-tas'),
 
-urlpatterns += patterns('',
     url(r'^accounts/login/$', 'djangocas.views.login', name='account-login'),
     url(r'^accounts/logout/$', 'djangocas.views.logout', name='account-logout'),
 )

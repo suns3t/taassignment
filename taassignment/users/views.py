@@ -36,7 +36,7 @@ def create(request):
         if user_form.is_valid():
             user_form.save()
             messages.success(request, 'New user is added!')
-            return HttpResponseRedirect(reverse('staff-home-users'))
+            return HttpResponseRedirect(reverse('users-list'))
     else:
         user_form = UserForm()
 
@@ -57,7 +57,7 @@ def edit(request, userid):
         if user_form.is_valid():
             user_form.save()
             messages.success(request, "User information is saved!")
-            return HttpResponseRedirect(reverse('staff-home-users'))
+            return HttpResponseRedirect(reverse('users-list'))
     else:
         user_form = UserForm(instance=user)
 
@@ -83,13 +83,13 @@ def delete(request, userid):
                 course.delete()
         user.delete()
         messages.success(request, "User is deleted!")
-        return HttpResponseRedirect(reverse("staff-home-users"))
+        return HttpResponseRedirect(reverse("users-list"))
 
 @user_passes_test(admin_member_check, login_url="/accounts/login")
 def clear_faculty(request):
     title = "Faculties"
-    redirect_url = '/admin/list_users'
-    target_url = '/admin/delete_all_faculties'
+    redirect_url = reverse("users-list")
+    target_url = reverse("users-clear-faculty")
     section = 'user-home'
 
     if request.POST:
@@ -112,8 +112,8 @@ def clear_faculty(request):
 @user_passes_test(admin_member_check, login_url="/accounts/login")
 def clear_tas(request):
     title = "TAs"
-    redirect_url = '/admin/list_users'
-    target_url = '/admin/delete_all_tas'
+    redirect_url = reverse("users-list")
+    target_url = reverse("users-clear-tas")
     section = 'user-home'
 
     if request.POST:
@@ -147,7 +147,7 @@ def upload(request):
             except Exception as e:
                 error= '%s (%s)' % (e.message, type(e))
             else:  
-                return HttpResponseRedirect(reverse("staff-home-users"))
+                return HttpResponseRedirect(reverse("users-list"))
     else:
         form = UploadFileForm()
 
