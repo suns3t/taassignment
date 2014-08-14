@@ -21,7 +21,7 @@ def list_(request):
     users = User.objects.all()
     section = 'user-home'
 
-    return render(request, 'admin/staff_user_view_list.html', {
+    return render(request, 'users/list.html', {
         'users' : users,
         'section' : section,
     })
@@ -40,7 +40,7 @@ def create(request):
     else:
         user_form = UserForm()
 
-    return render(request, 'admin/staff_add_user.html', {
+    return render(request, 'users/create.html', {
         'user_form' : user_form,
         'section' : section,
         'title' : title,
@@ -64,7 +64,7 @@ def edit(request, userid):
     if user == request.user:
         user_form.fields.pop("is_staff")
 
-    return render(request, 'admin/staff_add_user.html', {
+    return render(request, 'users/create.html', {
         'user_form' : user_form,
         'title' : title,
         'section' : section,
@@ -109,13 +109,6 @@ def clear_faculty(request):
 
         return HttpResponseRedirect(redirect_url)
 
-    return render(request, 'admin/staff_delete_all_template.html', {
-        "title" : title,
-        "redirect_url" : redirect_url,
-        "target_url" : target_url,
-        'section' : section,
-        })
-
 @user_passes_test(admin_member_check, login_url="/accounts/login")
 def clear_tas(request):
     title = "TAs"
@@ -136,13 +129,6 @@ def clear_tas(request):
             messages.success(request, "No TA is deleted!")
 
         return HttpResponseRedirect(redirect_url)
-
-    return render(request, 'admin/staff_delete_all_template.html', {
-        "title" : title,
-        "redirect_url" : redirect_url,
-        "target_url" : target_url,
-        'section' : section,
-        })
 
 # Upload Tas
 @user_passes_test(admin_member_check, login_url="/accounts/login")
@@ -165,7 +151,7 @@ def upload(request):
     else:
         form = UploadFileForm()
 
-    return render(request,'admin/upload_tas_import.html', {
+    return render(request,'users/upload.html', {
         'form': form, 
         'error': error,
         'section' : section

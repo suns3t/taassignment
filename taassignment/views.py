@@ -7,7 +7,7 @@ def home(request):
     no_of_course = Course.objects.count()
     section = "home"
 
-    return render(request, "course/public_view_list.html", {
+    return render(request, "home.html", {
         "courses" : courses,
         "has_courses" : no_of_course ,
         "section" : section,

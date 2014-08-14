@@ -21,7 +21,7 @@ def list_(request):
     courses = Course.objects.all()
     section = 'course-home'
 
-    return render(request, 'admin/staff_course_view_list.html', {
+    return render(request, 'courses/list.html', {
         'courses' : courses,
         'section' : section,
     })
@@ -45,7 +45,7 @@ def upload(request):
                 return HttpResponseRedirect(reverse("staff-home-courses"))
     else:
         form = UploadFileForm()
-    return render(request,'admin/upload_courses_import.html', {
+    return render(request,'courses/upload.html', {
         'form': form, 
         'error': error,
         'section' : section,
@@ -68,7 +68,7 @@ def create(request):
     else:
         course_form = CourseForm()
 
-    return render(request, 'admin/staff_add_course.html', {
+    return render(request, 'courses/create.html', {
         'course_form' : course_form,
         'title' : title,
         'section' : section,
@@ -92,7 +92,7 @@ def edit(request, courseid):
     else:
         course_form = CourseForm(instance=course)
 
-    return render(request, 'admin/staff_add_course.html', {
+    return render(request, 'courses/create.html', {
         'course_form' : course_form,
         'title' : title,
         'section' : section,
@@ -109,11 +109,6 @@ def delete(request, courseid):
         messages.success(request, "Course is deleted!")
         return HttpResponseRedirect(reverse('staff-home-courses'))
 
-    return render(request, 'admin/staff_delete_dialog.html', {
-        'course' : course,
-        'section' : section,
-    })
-
 @user_passes_test(admin_member_check, login_url="/accounts/login")
 def clear(request):
     courses = Course.objects.all()
@@ -128,7 +123,7 @@ def clear(request):
         messages.success(request, "All courses are deleted!")
         return HttpResponseRedirect(redirect_url)
 
-    return render(request, 'admin/staff_delete_all_template.html', {
+    return render(request, 'courses/clear.html', {
         "title" : title,
         "redirect_url" : redirect_url,
         "target_url" : target_url,
@@ -153,7 +148,7 @@ def change_tas(request):
     for course in courses:
         course.form_field = form[str(course.pk)]
     
-    return render(request, "course/faculty_view_list.html", {
+    return render(request, "courses/change_tas.html", {
         "courses" : courses,
         "has_courses" : no_of_course,
         "section" : section,

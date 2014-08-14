@@ -44,7 +44,7 @@
                         </a>
                         <div class="modal fade" id="delete_modal_course_{{ course.id }}" role="dialog">
                             <div class="modal-dialog ">
-                                {% include 'admin/staff_delete_course.html' %}
+                                {% include 'courses/modal.html' %}
                             </div>
                         </div>
                         <a href="/admin/edit_course/{{ course.id }}">{{ course.course_no }}</a></td>
