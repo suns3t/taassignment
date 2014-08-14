@@ -53,16 +53,13 @@ def edit(request, userid):
     section = 'user-home'
 
     if request.POST:
-        user_form = UserForm(request.POST, instance=user)
+        user_form = UserForm(request.POST, instance=user, user=request.user)
         if user_form.is_valid():
             user_form.save()
             messages.success(request, "User information saved!")
             return HttpResponseRedirect(reverse('users-list'))
     else:
-        user_form = UserForm(instance=user)
-
-    if user == request.user:
-        user_form.fields.pop("is_staff")
+        user_form = UserForm(instance=user, user=request.user)
 
     return render(request, 'users/create.html', {
         'user_form' : user_form,

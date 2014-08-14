@@ -16,6 +16,7 @@ class UserForm(forms.ModelForm):
     is_ta = forms.BooleanField(label='TA' ,initial=False, required=False)
 
     def __init__(self, *args, **kwargs):
+        user = kwargs.pop("user")
         super(UserForm, self).__init__(*args, **kwargs)
 
         self.fields['first_name'].widget.attrs['class'] = 'form-control'
@@ -24,6 +25,11 @@ class UserForm(forms.ModelForm):
 
         if self.instance.pk is not None:
             self.fields["username"].widget.attrs['readonly'] = 'readonly'
+
+
+        # staff users can't remove themselves as staff members
+        if user == self.instance:
+            self.fields.pop("is_staff")
 
     def clean_username(self):
         username = self.cleaned_data.get('username')
