@@ -19,6 +19,10 @@ Create an Mysql local database named taassignment and then synchronize the new d
     
     ./manage.py syncdb
 
+Collectstatic
+
+    ./manage.py collectstatic
+
 Now, you can start run server and test the site:
     
     ./manage.py runserver 0.0.0.0:5678
