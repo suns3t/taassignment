@@ -56,7 +56,7 @@ def edit(request, userid):
         user_form = UserForm(request.POST, instance=user)
         if user_form.is_valid():
             user_form.save()
-            messages.success(request, "User information is saved!")
+            messages.success(request, "User information saved!")
             return HttpResponseRedirect(reverse('users-list'))
     else:
         user_form = UserForm(instance=user)
@@ -103,9 +103,9 @@ def clear_faculty(request):
             faculty.delete()
             no_of_faculties = no_of_faculties + 1
         if no_of_faculties > 0:
-            messages.success(request, "%s faculties members are deleted!" % no_of_faculties )
+            messages.success(request, "%s faculties members deleted!" % no_of_faculties )
         else:
-            messages.success(request, "No faculty member is deleted!")
+            messages.success(request, "No faculty members deleted!")
 
         return HttpResponseRedirect(redirect_url)
 
@@ -124,9 +124,9 @@ def clear_tas(request):
             no_of_tas = no_of_tas + 1
 
         if no_of_tas > 0:
-            messages.success(request, "%s TAs are deleted!" % no_of_tas )
+            messages.success(request, "%s TAs deleted!" % no_of_tas )
         else:
-            messages.success(request, "No TA is deleted!")
+            messages.success(request, "No TA deleted!")
 
         return HttpResponseRedirect(redirect_url)
 
@@ -143,7 +143,7 @@ def upload(request):
                 with transaction.atomic():
                     _request_csv_tas_upload(request, request.FILES['file'])
             except (TypeError, ValueError) :
-                error='Wrong file type, number of columns do not mach!'
+                error='Wrong file type/number of columns do not mach!'
             except Exception as e:
                 error= '%s (%s)' % (e.message, type(e))
             else:  
@@ -166,7 +166,10 @@ def _request_csv_tas_upload(request, f):
         if len(r) != 1: raise ValueError 
         odin = r[0].strip()
         try:
-            user_exists = User.objects.get(username=odin)
+            user = User.objects.get(username=odin)
+            user.is_ta = 1
+            user.is_active = 1
+            user.save()
         except User.DoesNotExist:
             first_name, last_name = get_ldap_user_data(odin)
             if first_name is not None:
@@ -174,7 +177,7 @@ def _request_csv_tas_upload(request, f):
                 user.username = odin
                 user.first_name = first_name
                 user.last_name = last_name
-                user.is_ta  = 1
+                user.is_ta = 1
                 user.is_active = 1
                 user.save()
                 count = count + 1
@@ -182,10 +185,8 @@ def _request_csv_tas_upload(request, f):
                 invalid_users.append(odin) 
 
     if count:
-        messages.success(request, "CSV file is uploaded. %s new TAs are added!" % count)
-    else:
-        messages.warning(request, "TAs are already exist! No new TAs are created")
+        messages.success(request, "CSV file uploaded. %s new TAs added!" % count)
 
     if len(invalid_users) > 0:
-        messages.warning(request, "There are some invalid Odin usernames: %s. Please correct it and submit the file again!" % ", ".join(map(str, invalid_users)))
+        messages.warning(request, "There are some invalid Odin usernames: %s. They were not created." % ", ".join(map(str, invalid_users)))
 

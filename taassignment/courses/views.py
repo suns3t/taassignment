@@ -38,7 +38,7 @@ def upload(request):
                 with transaction.atomic():
                     _request_csv_courses_upload(request, request.FILES['file'])
             except (TypeError, ValueError) :
-                error='Wrong file type, number of columns do not mach!'
+                error='Wrong file type/number of columns do not mach!'
             except Exception as e:
                 error= '%s (%s)' % (e.message, type(e))
             else:
@@ -62,7 +62,7 @@ def create(request):
             course = course_form.save(commit=False)
             course.save()
             course_form.save_m2m()
-            messages.success(request, "New course is added!")
+            messages.success(request, "New course added!")
 
             return HttpResponseRedirect(reverse('courses-list'))
     else:
@@ -86,7 +86,7 @@ def edit(request, courseid):
             course = course_form.save(commit=False)
             course.save()
             course_form.save_m2m()
-            messages.success(request, "Course information is saved!")
+            messages.success(request, "Course information saved!")
 
             return HttpResponseRedirect(reverse('courses-list'))
     else:
@@ -120,7 +120,7 @@ def clear(request):
     if request.POST:
         courses.delete()
 
-        messages.success(request, "All courses are deleted!")
+        messages.success(request, "All courses deleted!")
         return HttpResponseRedirect(redirect_url)
 
     return render(request, 'courses/clear.html', {
@@ -141,7 +141,7 @@ def change_tas(request):
         form = SelectionForm(request.POST, user=request.user)
         if form.is_valid():
             form.save()          
-            messages.success(request, "TA information is updated.")
+            messages.success(request, "TA information updated.")
             return HttpResponseRedirect(request.get_full_path())
     else:
         form = SelectionForm(user=request.user)
@@ -157,7 +157,7 @@ def change_tas(request):
 def _request_csv_courses_upload(request, f):
     new_course = 0
     invalid_users = []
-    
+
     reader = csv.reader(f.read().splitlines())
     next(reader, None) # skip the headers
     for r in reader:
@@ -173,10 +173,8 @@ def _request_csv_courses_upload(request, f):
                 user.username  = odin
                 user.first_name = first_name
                 user.last_name = last_name
-                user.is_faculty = 1
-                user.is_active = 1
             else:
-                invalid_users.append(odin)
+                invalid_users.append(odin + " for course " + course_no)
 
         try:
             course = Course.objects.get(course_no=course_no)
@@ -185,19 +183,16 @@ def _request_csv_courses_upload(request, f):
             course.course_no = course_no
             course.course_name = course_name
             new_course = new_course + 1
-        
+
         if user is not None and course is not None:
+            user.is_faculty = 1
+            user.is_active = 1
             user.save()
             course.save()
             course.faculties.add(user)
             course.save()
 
     if len(invalid_users) > 0:
-        messages.warning(request, "There are some invalid Odin usernames: %s. Please correct it and submit the file again!" % ", ".join(map(str, invalid_users)))
-    
-    new_course = new_course - len(invalid_users)
-    if new_course:
-        messages.success(request, "CSV file is uploaded. %s new courses are added!" % new_course)
-    else:
-        messages.warning(request, "Courses uploaded are already exist! No new courses are created")
+        messages.warning(request, "There were invalid Odin usernames: %s." % ", ".join(map(str, invalid_users)))
 
+    messages.success(request, "CSV file uploaded. %s new courses added!" % new_course)
