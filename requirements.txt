@@ -1,5 +1,5 @@
 Django
 MySQL-python
 wsgiref
--e git://github.com/mdj2/djangocas.git#egg=djangocas
+-e git+https://github.com/mdj2/djangocas.git#egg=djangocas
 python-ldap==2.3.13
