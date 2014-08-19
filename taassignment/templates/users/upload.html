@@ -2,24 +2,18 @@
 {% block page_title %}Upload TA CSV File{% endblock %}
 
 {% block content %}
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('#id_file').on('change', function(){
-            $('#id_form_upload').trigger('submit')
-        })
-    })
-</script>
 <h3 class="text-dark-green"> Upload TAs CSV File </h3>
-<p>Click the <strong>Browse</strong> button and upload a CSV file with one column containing the Odin usernames of the TAs.</p>
-<p>Please use <a href="{{ STATIC_URL }}csv_templates/ta.csv">this template file</a>.</p>
+<p>Upload a CSV file with one column containing the Odin usernames of the TAs.</p>
+<p>Please use <a href="{{ STATIC_URL }}csv_templates/ta.csv" download="tas.csv">this template file</a>.</p>
 <form enctype="multipart/form-data" name="UploadTAsImport" method="post" id="id_form_upload">
     {% csrf_token %}
     {% if error %}
     <div class="alert alert-danger">{{ error }}</div>
     {% endif %}
-    <span class="btn btn-file btn-primary">
-        Browse {{ form.file }}
-    </span>
+    {{ form.file }}
+
+    <br />
+    <input type="submit" class="btn btn-primary" name="submit" value="Import" />
     <span class="btn btn-default">
         <a href="{% url 'users-list' %}">Cancel</a>
     </span>
