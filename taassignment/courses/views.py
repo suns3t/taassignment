@@ -106,7 +106,7 @@ def delete(request, courseid):
     if request.POST:
         course.delete()
 
-        messages.success(request, "Course is deleted!")
+        messages.success(request, "Course deleted!")
         return HttpResponseRedirect(reverse('courses-list'))
 
 @user_passes_test(admin_member_check, login_url="/accounts/login")

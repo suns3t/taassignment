@@ -32,13 +32,13 @@ def create(request):
     section = 'user-home'
 
     if request.POST:
-        user_form = UserForm(request.POST)
+        user_form = UserForm(request.POST, user=request.user)
         if user_form.is_valid():
             user_form.save()
-            messages.success(request, 'New user is added!')
+            messages.success(request, 'New user added!')
             return HttpResponseRedirect(reverse('users-list'))
     else:
-        user_form = UserForm()
+        user_form = UserForm(user=request.user)
 
     return render(request, 'users/create.html', {
         'user_form' : user_form,
@@ -79,7 +79,7 @@ def delete(request, userid):
             if course.faculties.count() == 1:
                 course.delete()
         user.delete()
-        messages.success(request, "User is deleted!")
+        messages.success(request, "User deleted!")
         return HttpResponseRedirect(reverse("users-list"))
 
 @user_passes_test(admin_member_check, login_url="/accounts/login")
@@ -100,7 +100,7 @@ def clear_faculty(request):
             faculty.delete()
             no_of_faculties = no_of_faculties + 1
         if no_of_faculties > 0:
-            messages.success(request, "%s faculties members deleted!" % no_of_faculties )
+            messages.success(request, "%s faculty members deleted!" % no_of_faculties )
         else:
             messages.success(request, "No faculty members deleted!")
 
