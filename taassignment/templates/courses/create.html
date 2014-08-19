@@ -20,7 +20,7 @@
     })
 </script>
 
-<form role="form" method="post" class="form-horizontal col-md-6" >
+<form role="form" method="post" class="form-horizontal col-md-8" >
     {% csrf_token %}
     {% if course_form.errors %}
     <div class="alert alert-danger">{{ course_form.errors }}</div>
@@ -28,9 +28,7 @@
     <h3 class="text-dark-green" >{{ title }}</h3>
     <p>Fill out the information of a classes in the following fields</p>
     <div class="row form-group">
-        <div class="control-label col-md-3 text-dark-green">
-            {{ course_form.course_no.label_tag }}
-        </div>
+        <label class="control-label col-md-2">{{ course_form.course_no.label }}</label>
         <div class="col-md-3">
             {{ course_form.course_no }}
         </div>
@@ -39,27 +37,25 @@
         </div>
     </div>
     <div class="row form-group">
-        <div class="control-label col-md-3 text-dark-green">
-            {{ course_form.faculties.label_tag }}
-        </div>
+        <label class="control-label col-md-2">{{ course_form.faculties.label }}</label>
         <div class="col-md-9">
             {{ course_form.faculties }}
         </div>
     </div>
     <div class="row form-group">
-        <div class="col-md-3 control-label text-dark-green">
-            {{ course_form.tas.label_tag }}
-        </div>
+        <label class="control-label col-md-2">{{ course_form.tas.label }}</label>
         <div class="col-md-9">
             {{ course_form.tas }}  
         </div>
     </div>
-    <div class="row form-group">
-        <div class="col-xs-12 col-md-6">
-            <input type="submit" value="Save" class="btn btn-primary btn-block">
-        </div>
-        <div class="col-xs-12 col-md-6">
-            <a href="{% url 'courses-list' %}" class="btn btn-default btn-block">Cancel</a>
+    <div class="form-group">
+        <div class="col-md-offset-2">
+            <div class="col-md-4">
+                <input type="submit" value="Save" class="btn btn-primary btn-block">
+            </div>
+            <div class="col-md-4">
+                <a href="{% url 'courses-list' %}" class="btn btn-default btn-block">Cancel</a>
+            </div>
         </div>
     </div>
     

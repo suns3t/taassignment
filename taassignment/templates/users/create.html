@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<form role="form" method="post" class="form-horizontal col-md-6">
+<form role="form" method="post" class="form-horizontal col-md-8">
     {% csrf_token %}
     {% if user_form.errors %}
         <div class="alert alert-danger">
@@ -17,12 +17,8 @@
     <p style="">
         Fill in the user information below:
     </p>
-    <div class="row form-group">
-        <div class="col-md-2">
-            <div class="control-label text-dark-green">
-                {{ user_form.first_name.label_tag }}
-            </div>
-        </div>
+    <div class="form-group">
+        <label class="control-label col-md-2">{{ user_form.first_name.label }}</label>
         <div class="col-md-5">
             {{ user_form.first_name }}
         </div>
@@ -30,15 +26,13 @@
             {{ user_form.last_name }}
         </div>
     </div>
-    <div class="row form-group">
-        <div class="col-md-2 control-label text-dark-green">
-            {{ user_form.username.label_tag }}
-        </div>
-        <div class="col-md-6">
+    <div class="form-group">
+        <label class="control-label col-md-2">{{ user_form.username.label }}</label>
+        <div class="col-md-5">
             {{ user_form.username }}
         </div>
     </div>
-    <div class="row form-group">
+    <div class="form-group">
         <div class="col-md-3 control-label text-dark-green">
             {{ user_form.is_staff }}
             {{ user_form.is_staff.label }}
@@ -52,12 +46,14 @@
             {{ user_form.is_ta.label}}
         </div>
     </div>
-    <div class="row form-group">
-        <div class="col-xs-6 col-md-6">
-            <input type="submit" value="Save" class="btn btn-primary btn-block">
-        </div>
-        <div class="col-xs-6 col-md-6">
-            <a href="{% url 'users-list' %}" class="btn btn-default btn-block">Cancel</a>
+    <div class="form-group">
+        <div class="col-md-offset-2">
+            <div class="col-md-4">
+                <input type="submit" value="Save" class="btn btn-primary btn-block">
+            </div>
+            <div class="col-md-4">
+                <a href="{% url 'users-list' %}" class="btn btn-default btn-block">Cancel</a>
+            </div>
         </div>
     </div>
 </form>
