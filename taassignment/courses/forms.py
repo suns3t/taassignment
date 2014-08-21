@@ -9,13 +9,15 @@ class UploadFileForm(forms.Form):
 class CourseForm(forms.ModelForm):
        
     course_no = forms.CharField(label="Course", required=True, widget=forms.TextInput(attrs={'placeholder': 'Course No.', 'class' : 'form-control'}))
+    section_no = forms.CharField(label="Section", required=False, widget=forms.TextInput(attrs={'placeholder': 'Section No.', 'class': 'form-control'}))
     course_name = forms.CharField(required=True, widget=forms.TextInput(attrs={'placeholder': 'Course Name', 'class' : 'form-control'}))
     
     list_of_faculties = User.objects.filter(is_faculty=True)
     list_of_tas = User.objects.filter(is_ta=True)
 
     faculties = forms.ModelMultipleChoiceField(label="Teacher", required=True, queryset=list_of_faculties)
-    tas = forms.ModelMultipleChoiceField(label="TA", required=False, queryset=list_of_tas)
+    max_tas = forms.IntegerField(required=True, widget=forms.NumberInput(attrs={'placeholder': "Max No. TA's", 'class': 'form-control'}))
+    tas = forms.ModelMultipleChoiceField(label="TA's", required=False, queryset=list_of_tas)
 
     def __init__(self, *args, **kwargs):
         super(CourseForm, self).__init__(*args, **kwargs)
@@ -30,16 +32,23 @@ class CourseForm(forms.ModelForm):
 
     def clean_tas(self):
         tas = self.cleaned_data.get('tas')
-
+        max_tas = self.cleaned_data.get('max_tas')
+        if tas.count() > max_tas:
+            raise forms.ValidationError("Exceeds maximum allowed TA's")
+        
         return User.objects.filter(id__in=tas)
+
 
     class Meta:
         model = Course
         fields = (
             'course_no',
+            'section_no',
             'course_name',
             'faculties',
-            'tas'
+            'max_tas',
+            'tas',
+
         )
 
 
