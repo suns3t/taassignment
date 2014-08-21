@@ -4,10 +4,12 @@ from taassignment.users.models import User
 
 class Course(models.Model):
     id = models.AutoField(primary_key=True)
-    course_no = models.CharField(max_length=10,blank=False)
+    course_no = models.CharField(max_length=10, blank=False)
+    section_no = models.CharField(max_length=10, blank=True)
     course_name = models.CharField(max_length=100, blank=False)
     faculties = models.ManyToManyField(User, related_name='faculties', blank=True)
     tas = models.ManyToManyField(User, related_name='tas', blank=True)
+    max_tas = models.IntegerField()
 
     class Meta:
         db_table = "course"
