@@ -64,9 +64,17 @@ class SelectionForm(forms.Form):
             field.initial = course.tas.all()
             self.fields[str(course.pk)] = field
 
+    def clean(self):
+        for course in self.courses:
+            self.tas = self.cleaned_data.get(str(course.pk), [])
+            if self.tas.count() > course.max_tas:
+                raise forms.ValidationError("Exceeds maximum allowed TA's")
+            return User.objects.filter(id__in=self.tas) 
+
     def save(self):
         for course in self.courses:
-            tas = self.cleaned_data.get(str(course.pk), [])
+            tas = self.tas
             course.tas.clear()
             for ta in tas:
                 course.tas.add(ta)
+
