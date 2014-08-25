@@ -24,7 +24,13 @@
 <form role="form" method="post" class="form-horizontal col-md-8" >
     {% csrf_token %}
     {% if course_form.errors %}
-    <div class="alert alert-danger">{{ course_form.errors }}</div>
+        <div class="alert alert-danger">
+        {% for fields, errors in course_form.errors.items %}
+            {% for error in errors %}
+                {{ error }}
+            {% endfor%}
+        {% endfor %}
+        </div>
     {% endif %}
     <h3 class="text-dark-green" >{{ title }}</h3>
     <p>Fill out the course information below:</p>
