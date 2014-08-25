@@ -28,13 +28,13 @@
             <tbody>
                 {% for course in courses %}
                 <tr>
-                    <td class="col-md-2">{{ course.course_no }}</td>
+                    <td class="col-md-2">{{ course.course_no }}-{{ course.section_no }}</td>
                     <td class="col-md-4">{{ course.course_name }}</td>
                     <td class="col-md-3">{% for faculty in course.faculties.all %}
                             {{ faculty }}<br/>
                         {% endfor %}
                     </td>
-                    <td class="col-md-3">{{ course.tas.count }}</td>
+                    <td class="col-md-3">{{ course.tas.count }}/{{ course.max_tas }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
