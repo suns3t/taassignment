@@ -26,6 +26,7 @@ urlpatterns = patterns('',
     url(r'^courses/delete/(?P<courseid>\d+)$', courses.delete, name='courses-delete'),
     url(r'^courses/clear$', courses.clear, name='courses-clear'),
     url(r'^courses/change_tas/$', courses.change_tas, name='courses-change-tas'),
+    url(r'^courses/download/$', courses.csv_courses_download, name='courses-download'),
 
     url(r'^accounts/login/$', 'djangocas.views.login', name='account-login'),
     url(r'^accounts/logout/$', 'djangocas.views.logout', name='account-logout'),
