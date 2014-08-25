@@ -4,7 +4,7 @@
 
 {% block content %}
 <h3 class="text-dark-green"> Upload Courses CSV File </h3>
-<p>Upload a csv file containing three columns: course number, course name and odin account of the faculty member teaching the class.</p>
+<p>Upload a csv file containing five columns: course number, section number, course name, max number of TA's, and odin account of the faculty member teaching the class.</p>
 <p><strong>Please use the <a href="{{ STATIC_URL }}csv_templates/course.csv" download="courses.csv">template file here</a>.</strong></p>
 <form enctype="multipart/form-data" name="UploadCoursesImport" method="post" id="id_form_upload">
     {% csrf_token %}
