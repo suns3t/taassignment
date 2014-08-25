@@ -163,7 +163,7 @@ def _request_csv_courses_upload(request, f):
     for r in reader:
         user = None
         course = None
-        course_no, course_name, odin = [item.strip() for item in r] # IndexError or PackingError
+        course_no, section_no, course_name, max_tas, odin = [item.strip() for item in r] # IndexError or PackingError
         try:
             user = User.objects.get(username=odin)
         except User.DoesNotExist:
@@ -174,14 +174,16 @@ def _request_csv_courses_upload(request, f):
                 user.first_name = first_name
                 user.last_name = last_name
             else:
-                invalid_users.append(odin + " for course " + course_no)
+                invalid_users.append(odin + " for course " + course_no + "-" + section_no)
 
         try:
-            course = Course.objects.get(course_no=course_no)
+            course = Course.objects.get(course_no=course_no, section_no=section_no)
         except Course.DoesNotExist:
             course = Course()
             course.course_no = course_no
+            course.section_no = section_no
             course.course_name = course_name
+            course.max_tas = max_tas
             new_course = new_course + 1
 
         if user is not None and course is not None:
