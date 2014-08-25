@@ -2,7 +2,7 @@ import csv
 
 from django.shortcuts import render, get_object_or_404
 from djangocas.decorators import user_passes_test
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.db import transaction
@@ -199,3 +199,32 @@ def _request_csv_courses_upload(request, f):
         messages.warning(request, "There were invalid Odin usernames: %s." % ", ".join(map(str, invalid_users)))
 
     messages.success(request, "CSV file uploaded. %s new courses added!" % new_course)
+
+@user_passes_test(faculty_member_check, login_url='/accounts/login')
+def csv_courses_download(request):
+    """
+    View to allow faculty to request a CSV file containing all course 
+    information and assigned TA's
+    """
+    response = HttpResponse(content_type="text/csv")
+    response['Content-Disposition'] = 'attachment; filename="courses.csv"'
+    writer = csv.writer(response)
+    writer.writerow(['Course Number','Section Number', 'Course Name', 'Max Number of TAs','Teacher Odin Username','TAs Odin Username(s)'])
+
+    courses = Course.objects.all()
+    for course in courses:
+        faculty = ""
+        for faculties in course.faculties.all():
+            faculty += str(faculties.username) + ", "
+        if faculty.endswith(", "):
+            faculty = faculty[:-2]
+
+        tas = ""
+        for ta in course.tas.all():
+            tas += str(ta.username) + ", "
+        if tas.endswith(", "):
+            tas = tas[:-2]
+
+        writer.writerow([course.course_no, course.section_no, course.course_name, course.max_tas, faculty, tas])
+
+    return response
