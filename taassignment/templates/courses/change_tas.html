@@ -24,6 +24,15 @@
 {% if has_courses %}
 <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
+    {% if form.errors %}
+    <div class="alert alert-danger">
+        {% for field, errors in form.errors.items %}
+            {% for error in errors %}
+                {{ error }}
+            {% endfor %}
+        {% endfor %}
+    </div>
+    {% endif %}
     <div class="panel panel-primary">
         <div class="panel-heading">
             <h3 class="panel-title">Your current classes</h3>
