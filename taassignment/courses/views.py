@@ -152,6 +152,7 @@ def change_tas(request):
         "courses" : courses,
         "has_courses" : no_of_course,
         "section" : section,
+        "form": form,
     })
 
 def _request_csv_courses_upload(request, f):
