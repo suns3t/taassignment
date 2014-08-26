@@ -17,3 +17,9 @@ class Course(models.Model):
         permissions = (
             ("change_ta", "Can change TA in this course"),
         )
+
+    def __str__(self):
+        if self.section_no:
+            return "%s-%s" % (self.course_no, self.section_no)
+        else:
+            return "%s" % self.course_no

@@ -46,7 +46,7 @@
                                 {% include 'courses/modal.html' %}
                             </div>
                         </div>
-                        <a href="{% url 'courses-edit' course.id %}">{{ course.course_no }}-{{ course.section_no }}</a></td>
+                        <a href="{% url 'courses-edit' course.id %}">{{ course }}</a></td>
                     <td class="col-md-4">{{ course.course_name }}</td>
                     <td class="col-md-3">
                         {% for faculty in course.faculties.all %}
