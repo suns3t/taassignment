@@ -60,7 +60,7 @@ class SelectionForm(forms.Form):
         self.courses = Course.objects.filter(faculties=self.user)
         tas = User.objects.filter(is_ta=True)
         for course in self.courses:
-            field = forms.ModelMultipleChoiceField(queryset=tas, required=False, widget=forms.SelectMultiple(attrs={'class': 'multi_select form-control' }))
+            field = forms.ModelMultipleChoiceField(queryset=tas, required=False, widget=forms.SelectMultiple(attrs={'class': 'multi_select form-control', 'data-max': course.max_tas }))
             field.initial = course.tas.all()
             self.fields[str(course.pk)] = field
 
