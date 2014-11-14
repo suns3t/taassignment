@@ -28,9 +28,14 @@ urlpatterns = patterns('',
     url(r'^courses/change_tas/$', courses.change_tas, name='courses-change-tas'),
     url(r'^courses/download/$', courses.csv_courses_download, name='courses-download'),
 
-    url(r'^accounts/login/$', 'djangocas.views.login', name='account-login'),
-    url(r'^accounts/logout/$', 'djangocas.views.logout', name='account-logout'),
 )
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+if settings.USE_CAS:
+    urlpatterns += patterns('',
+        url(r'^accounts/login/$', 'djangocas.views.login', name='account-login'),
+        url(r'^accounts/logout/$', 'djangocas.views.logout', name='account-logout'),
+    )
+    

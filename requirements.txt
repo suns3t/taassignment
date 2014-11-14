@@ -1,4 +1,4 @@
-Django
+Django==1.6
 MySQL-python
 wsgiref
 -e git+https://github.com/mdj2/djangocas.git#egg=djangocas
